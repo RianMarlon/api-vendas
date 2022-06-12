@@ -5,6 +5,10 @@ import Product from '../entities/product';
 class ProductsRepository {
   private readonly repository = getRepository(Product);
 
+  async findAll(): Promise<Product[]> {
+    return await this.repository.find();
+  }
+
   async findByName(name: string): Promise<Product | undefined> {
     return await this.repository.findOne({
       where: {
