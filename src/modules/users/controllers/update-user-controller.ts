@@ -13,3 +13,5 @@ class UpdateUserController {
     return response.status(200).json(user);
   }
 }
+
+export default UpdateUserController;
