@@ -27,7 +27,13 @@ class UpdateProductService {
       ...data,
     };
 
-    const productUpdated = await productsRepository.update(id, newProduct);
+    const productToUpdate = new Product();
+    productToUpdate.id = id;
+    productToUpdate.name = newProduct.name;
+    productToUpdate.price = newProduct.price;
+    productToUpdate.quantity = newProduct.quantity;
+
+    const productUpdated = await productsRepository.update(id, productToUpdate);
     return productUpdated;
   }
 }
