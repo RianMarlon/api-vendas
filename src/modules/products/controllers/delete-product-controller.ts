@@ -8,10 +8,6 @@ class DeleteProductController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
 
-    if (!id) {
-      throw new AppError('ID não informado');
-    }
-
     const deleteProductService = new DeleteProductService();
     await deleteProductService.execute(id);
 
