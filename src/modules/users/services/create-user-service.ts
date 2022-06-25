@@ -1,4 +1,5 @@
 import AppError from '@shared/errors/app-error';
+import Hash from '@shared/utils/hash';
 
 import User from '../typeorm/entities/user';
 
@@ -15,6 +16,8 @@ class CreateUserService {
     data.email = data.email?.toLowerCase();
 
     const usersRepository = new UsersRepository();
+    const hash = new Hash();
+
     const userByEmail = await usersRepository.findByEmail(data.email);
 
     if (userByEmail) throw new AppError('Email address already used');
@@ -22,10 +25,12 @@ class CreateUserService {
     const userCreated = new User();
     userCreated.name = data.name;
     userCreated.email = data.email.toLowerCase();
-    userCreated.password = data.password;
+    userCreated.password = await hash.generate(data.password);
 
     await usersRepository.create(userCreated);
 
     return userCreated;
   }
 }
+
+export default CreateUserService;
