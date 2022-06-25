@@ -29,9 +29,8 @@ class Product {
   updatedAt: Date;
 
   constructor() {
-    const uuid = new UUID();
-
     if (!this.id) {
+      const uuid = new UUID();
       this.id = uuid.generate();
     }
   }
