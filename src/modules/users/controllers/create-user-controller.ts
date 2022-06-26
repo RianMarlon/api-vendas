@@ -6,8 +6,8 @@ class CreateUserController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
     const { name, email, password } = request.body;
 
-    const createUserController = new CreateUserService();
-    const user = await createUserController.execute({
+    const createUserService = new CreateUserService();
+    const user = await createUserService.execute({
       name,
       email,
       password,
