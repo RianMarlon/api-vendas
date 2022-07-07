@@ -1,16 +1,22 @@
 import { Request, Response, Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
+import multer from 'multer';
+
+import uploadConfig from '@config/upload';
 
 import ListUsersController from '../controllers/list-users-controller';
 import ShowUserController from '../controllers/show-user-controller';
 import CreateUserController from '../controllers/create-user-controller';
 import UpdateUserController from '../controllers/update-user-controller';
+import UpdateUserAvatarController from '../controllers/update-user-avatar-controller';
 import DeleteUserController from '../controllers/delete-user-controller';
+import isAuthenticated from '@shared/http/middlewares/is-authenticated';
 
 const listUsersController = new ListUsersController();
 const showUserController = new ShowUserController();
 const createUserController = new CreateUserController();
 const updateUserController = new UpdateUserController();
+const updateUserAvatarController = new UpdateUserAvatarController();
 const deleteUserController = new DeleteUserController();
 
 const usersRouter = Router();
@@ -57,6 +63,14 @@ usersRouter.put(
   }),
   (request: Request, response: Response) =>
     updateUserController.handleRequest(request, response),
+);
+
+usersRouter.patch(
+  '/avatar/:id',
+  isAuthenticated,
+  multer(uploadConfig).single('avatar'),
+  (request: Request, response: Response) =>
+    updateUserAvatarController.handleRequest(request, response),
 );
 
 usersRouter.delete(
