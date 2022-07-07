@@ -50,7 +50,8 @@ usersRouter.post(
 );
 
 usersRouter.put(
-  '/:id',
+  '/',
+  isAuthenticated,
   celebrate({
     [Segments.PARAMS]: {
       id: Joi.string().uuid().required(),
@@ -66,7 +67,7 @@ usersRouter.put(
 );
 
 usersRouter.patch(
-  '/avatar/:id',
+  '/avatar',
   isAuthenticated,
   multer(uploadConfig).single('avatar'),
   (request: Request, response: Response) =>
@@ -74,7 +75,8 @@ usersRouter.patch(
 );
 
 usersRouter.delete(
-  '/:id',
+  '/',
+  isAuthenticated,
   celebrate({
     [Segments.PARAMS]: {
       id: Joi.string().uuid().required(),

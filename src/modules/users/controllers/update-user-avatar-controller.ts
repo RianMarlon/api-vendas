@@ -5,7 +5,7 @@ import UpdateUserAvatarService from '../services/update-user-avatar-service';
 
 class UpdateUserAvatarController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
-    const { id } = request.params;
+    const { id } = request.user;
 
     if (!request.file) {
       throw new AppError('Arquivo não informado');
