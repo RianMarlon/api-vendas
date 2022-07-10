@@ -1,3 +1,4 @@
+import Mail from '@config/mail';
 import AppError from '@shared/errors/app-error';
 
 import UsersRepository from '../typeorm/repositories/users-repository';
@@ -16,8 +17,14 @@ class SendForgotPasswordEmailService {
 
     if (!userByEmail) throw new AppError('User does not exists');
 
-    const token = await usersTokensRepository.generate(userByEmail.id);
-    console.log(token);
+    const { token } = await usersTokensRepository.generate(userByEmail.id);
+
+    Mail.sendEmail({
+      from: 'naoresponda@apivendas.com.br',
+      to: userByEmail.email,
+      subject: 'Redefinição de senha',
+      html: `Solicitação de redefinicação de senha recebida: ${token}`,
+    });
   }
 }
 
