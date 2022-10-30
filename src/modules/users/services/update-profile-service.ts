@@ -11,7 +11,7 @@ interface IRequest {
 }
 
 class UpdateProfileService {
-  async execute(id: string, data: IRequest) {
+  async execute(id: string, data: IRequest): Promise<User> {
     const usersRepository = new UsersRepository();
     const hash = new Hash();
     const userById = await usersRepository.findById(id);
