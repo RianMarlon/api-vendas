@@ -1,4 +1,6 @@
-import Mail from '@config/mail';
+import path from 'path';
+
+import Mail from '@config/mail/mail';
 import AppError from '@shared/errors/app-error';
 
 import UsersRepository from '../typeorm/repositories/users-repository';
@@ -19,11 +21,29 @@ class SendForgotPasswordEmailService {
 
     const { token } = await usersTokensRepository.generate(userByEmail.id);
 
+    const templateFile = path.resolve(
+      __dirname,
+      '..',
+      'templates',
+      'forgot-password.hbs',
+    );
     Mail.sendEmail({
-      from: 'naoresponda@apivendas.com.br',
-      to: userByEmail.email,
+      from: {
+        name: 'Equipe API Vendas',
+        email: 'naoresponda@apivendas.com.br',
+      },
+      to: {
+        name: userByEmail.name,
+        email: userByEmail.email,
+      },
       subject: 'Redefinição de senha',
-      html: `Solicitação de redefinicação de senha recebida: ${token}`,
+      html: {
+        file: templateFile,
+        variables: {
+          name: userByEmail.name,
+          link: `http://localhost:3000/reset-password?token=${token}`,
+        },
+      },
     });
   }
 }
