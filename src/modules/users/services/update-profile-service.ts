@@ -32,8 +32,8 @@ class UpdateProfileService {
 
     if (data.password && data.oldPassword) {
       const oldPasswordMatch = await hash.compare(
-        userById.password,
         data.oldPassword,
+        userById.password,
       );
 
       if (!oldPasswordMatch) throw new AppError('Old password does not match');
