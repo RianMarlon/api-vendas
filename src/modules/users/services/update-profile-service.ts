@@ -18,19 +18,17 @@ class UpdateProfileService {
 
     if (!userById) throw new AppError('User not found.');
 
-    const userByEmail = await usersRepository.findByEmail(data.email);
-    if (userByEmail && userById.id !== userByEmail.id)
-      throw new AppError('There is already one user with this email.');
-
     const newUser = {
-      ...userById,
-      ...data,
+      name: data.name || userById.name,
+      email: data.email?.toLowerCase() || userById.email,
+      password: userById.password,
     };
 
-    const userToUpdate = new User();
-    userToUpdate.id = id;
-    userToUpdate.name = newUser.name;
-    userToUpdate.email = newUser.email.toLowerCase();
+    if (data.email) {
+      const userByEmail = await usersRepository.findByEmail(data.email);
+      if (userByEmail && userById.id !== userByEmail.id)
+        throw new AppError('There is already one user with this email.');
+    }
 
     if (data.password && data.oldPassword) {
       const oldPasswordMatch = await hash.compare(
@@ -42,11 +40,11 @@ class UpdateProfileService {
 
       if (data.password) {
         const hash = new Hash();
-        userToUpdate.password = await hash.generate(data.password);
+        newUser.password = await hash.generate(data.password);
       }
     }
 
-    const userUpdated = await usersRepository.update(id, userToUpdate);
+    const userUpdated = await usersRepository.update(id, newUser);
 
     return userUpdated;
   }
