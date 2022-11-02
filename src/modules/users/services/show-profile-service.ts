@@ -5,7 +5,7 @@ import UsersRepository from '../typeorm/repositories/users-repository';
 class ShowProfileService {
   async execute(id: string): Promise<User | undefined> {
     const usersRepository = new UsersRepository();
-    const userById = usersRepository.findById(id);
+    const userById = await usersRepository.findById(id);
 
     if (!userById) throw new AppError('User not found');
 

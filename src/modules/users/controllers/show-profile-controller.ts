@@ -4,7 +4,7 @@ import ShowProfileService from '../services/show-profile-service';
 
 class ShowProfileController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
-    const { id } = request.params;
+    const { id } = request.user;
 
     const showProfileService = new ShowProfileService();
     const user = await showProfileService.execute(id);
