@@ -31,6 +31,13 @@ app.use(
       });
     }
 
+    if (error instanceof SyntaxError) {
+      return response.status(400).json({
+        status: 'error',
+        message: error.message,
+      });
+    }
+
     return response.status(500).json({
       status: 'error',
       message: 'Internal server error',
