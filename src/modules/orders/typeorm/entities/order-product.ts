@@ -2,22 +2,21 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { UUID } from '@shared/utils/uuid';
 
-import OrderProduct from '@modules/orders/typeorm/entities/order-product';
+import Product from '@modules/products/typeorm/entities/product';
+import Order from './order';
 
-@Entity('products')
-class Product {
+@Entity('orders_products')
+class OrderProduct {
   @PrimaryColumn()
   id: string;
-
-  @Column()
-  name: string;
 
   @Column('decimal')
   price: number;
@@ -25,8 +24,13 @@ class Product {
   @Column('int')
   quantity: number;
 
-  @OneToMany(() => OrderProduct, orderProduct => orderProduct.product)
-  ordersProducts: OrderProduct[];
+  @ManyToOne(() => Order, order => order.ordersProducts)
+  @JoinColumn({ name: 'order_id' })
+  order: Order;
+
+  @ManyToOne(() => Product, product => product.ordersProducts)
+  @JoinColumn({ name: 'product_id' })
+  product: Product;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -42,4 +46,4 @@ class Product {
   }
 }
 
-export default Product;
+export default OrderProduct;

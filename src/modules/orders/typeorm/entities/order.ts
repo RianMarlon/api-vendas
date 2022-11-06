@@ -1,15 +1,17 @@
 import {
-  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { UUID } from '@shared/utils/uuid';
+
 import Customer from '@modules/customers/typeorm/entities/customer';
+import OrderProduct from './order-product';
 
 @Entity('order')
 class Order {
@@ -19,6 +21,9 @@ class Order {
   @ManyToOne(() => Customer)
   @JoinColumn({ name: 'customer_id' })
   customer: Customer;
+
+  @OneToMany(() => OrderProduct, orderProduct => orderProduct.order)
+  ordersProducts: OrderProduct[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
