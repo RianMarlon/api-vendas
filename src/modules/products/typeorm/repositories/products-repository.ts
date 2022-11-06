@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository, In } from 'typeorm';
 
 import Product from '../entities/product';
 
@@ -7,6 +7,14 @@ class ProductsRepository {
 
   async findAll(): Promise<Product[]> {
     return await this.repository.find();
+  }
+
+  async findAllByIds(ids: string[]): Promise<Product[]> {
+    return await this.repository.find({
+      where: {
+        id: In(ids),
+      },
+    });
   }
 
   async findByName(name: string): Promise<Product | undefined> {
@@ -44,6 +52,11 @@ class ProductsRepository {
     await this.repository.save(productUpdated);
 
     return productUpdated;
+  }
+
+  async updateProducts(productsToUpdate: Product[]) {
+    await this.repository.save(productsToUpdate);
+    return productsToUpdate;
   }
 
   async delete(id: string): Promise<void> {

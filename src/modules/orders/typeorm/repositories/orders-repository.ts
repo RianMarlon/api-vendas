@@ -5,7 +5,7 @@ import Order from '../entities/order';
 
 interface ICreateOrder {
   products: {
-    productId: string;
+    id: string;
     price: number;
     quantity: number;
   }[];
