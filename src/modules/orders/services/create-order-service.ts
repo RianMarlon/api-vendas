@@ -10,7 +10,6 @@ interface IRequest {
   customerId: string;
   products: {
     id: string;
-    price: number;
     quantity: number;
   }[];
 }
