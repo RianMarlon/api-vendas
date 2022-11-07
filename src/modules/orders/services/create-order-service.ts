@@ -5,7 +5,6 @@ import Order from '../typeorm/entities/order';
 import CustomersRepository from '@modules/customers/typeorm/repositories/customers-repository';
 import ProductsRepository from '@modules/products/typeorm/repositories/products-repository';
 import OrdersRepository from '../typeorm/repositories/orders-repository';
-import Product from '@modules/products/typeorm/entities/product';
 
 interface IRequest {
   customerId: string;

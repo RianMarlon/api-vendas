@@ -28,7 +28,7 @@ class OrdersRepository {
     const orderCreated = this.repository.create({
       customer: customer,
       ordersProducts: products,
-    } as Order);
+    });
     await this.repository.save(orderCreated);
 
     return orderCreated;

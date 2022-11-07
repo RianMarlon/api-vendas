@@ -1,6 +1,8 @@
 import { Request, Response, Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 
+import isAuthenticated from '@shared/http/middlewares/is-authenticated';
+
 import ShowOrderController from '../controllers/show-order-controller';
 import CreateOrderController from '../controllers/create-order-controller';
 
@@ -8,6 +10,8 @@ const showOrderController = new ShowOrderController();
 const createOrderController = new CreateOrderController();
 
 const ordersRouter = Router();
+
+ordersRouter.use(isAuthenticated);
 
 ordersRouter.get(
   '/:id',
@@ -28,7 +32,7 @@ ordersRouter.post(
       products: Joi.array()
         .items({
           id: Joi.string().uuid().required(),
-          quantity: Joi.number().integer().required(),
+          quantity: Joi.number().integer().positive().required(),
         })
         .required(),
     },
