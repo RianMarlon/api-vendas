@@ -5,7 +5,7 @@ import Order from '../entities/order';
 
 interface ICreateOrder {
   products: {
-    id: string;
+    productId: string;
     price: number;
     quantity: number;
   }[];
@@ -24,11 +24,11 @@ class OrdersRepository {
     });
   }
 
-  async create(orderToCreate: ICreateOrder): Promise<Order> {
+  async create({ customer, products }: ICreateOrder): Promise<Order> {
     const orderCreated = this.repository.create({
-      customer: orderToCreate.customer,
-      ordersProducts: orderToCreate.products,
-    });
+      customer: customer,
+      ordersProducts: products,
+    } as Order);
     await this.repository.save(orderCreated);
 
     return orderCreated;

@@ -13,7 +13,7 @@ import { UUID } from '@shared/utils/uuid';
 import Customer from '@modules/customers/typeorm/entities/customer';
 import OrderProduct from './order-product';
 
-@Entity('order')
+@Entity('orders')
 class Order {
   @PrimaryColumn()
   id: string;

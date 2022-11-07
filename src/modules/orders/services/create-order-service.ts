@@ -5,6 +5,7 @@ import Order from '../typeorm/entities/order';
 import CustomersRepository from '@modules/customers/typeorm/repositories/customers-repository';
 import ProductsRepository from '@modules/products/typeorm/repositories/products-repository';
 import OrdersRepository from '../typeorm/repositories/orders-repository';
+import Product from '@modules/products/typeorm/entities/product';
 
 interface IRequest {
   customerId: string;
@@ -39,34 +40,42 @@ class CreateOrderService {
     if (inexistentProducts.length)
       throw new AppError(`Could not find product ${inexistentProducts[0].id}.`);
 
-    const productsWithQuantityAvailable = products.filter(product =>
+    const productsWithQuantityUnavailable = products.filter(product =>
       productsByIds.find(
         productExistent =>
           productExistent.id === product.id &&
-          productExistent.quantity <= product.quantity,
+          productExistent.quantity < product.quantity,
       ),
     );
 
-    if (productsWithQuantityAvailable)
+    if (productsWithQuantityUnavailable.length)
       throw new AppError(
-        `The quantity ${productsWithQuantityAvailable[0].quantity} is not available for ${productsWithQuantityAvailable[0].id}`,
+        `The quantity ${productsWithQuantityUnavailable[0].quantity} is not available for ${productsWithQuantityUnavailable[0].id}`,
       );
+
+    const productsToOrder = products.map(product => ({
+      productId: product.id,
+      quantity: product.quantity,
+      price: productsByIds.filter(
+        productById => productById.id === product.id,
+      )[0].price,
+    }));
 
     const orderCreated = await ordersRepository.create({
       customer: customerById,
-      products: productsByIds,
+      products: productsToOrder,
     });
 
     const { ordersProducts } = orderCreated;
 
-    const updatedProductsQuantity = ordersProducts.map(product => {
-      const productById = productsByIds.filter(
-        productExistent => productExistent.id === product.id,
+    const updatedProductsQuantity = ordersProducts.map(orderProduct => {
+      const product = productsByIds.filter(
+        product => product.id === orderProduct.productId,
       )[0];
 
       return {
-        ...productById,
-        quantity: productById.quantity - product.quantity,
+        ...product,
+        quantity: product.quantity - orderProduct.quantity,
       };
     });
     await productsRepository.updateProducts(updatedProductsQuantity);
