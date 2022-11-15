@@ -1,5 +1,8 @@
 import AppError from '@shared/errors/app-error';
+import RedisCache from '@shared/cache/redis-cache';
+
 import Product from '../typeorm/entities/product';
+
 import ProductsRepository from '../typeorm/repositories/products-repository';
 
 interface IRequest {
@@ -11,6 +14,8 @@ interface IRequest {
 class UpdateProductService {
   async execute(id: string, data: IRequest): Promise<Product> {
     const productsRepository = new ProductsRepository();
+    const redisCache = new RedisCache();
+
     const productById = await productsRepository.findById(id);
 
     if (!productById) throw new AppError('Product not found');
@@ -33,6 +38,7 @@ class UpdateProductService {
     productToUpdate.price = newProduct.price;
     productToUpdate.quantity = newProduct.quantity;
 
+    await redisCache.delete('api-vendas:products:list-all');
     const productUpdated = await productsRepository.update(id, productToUpdate);
     return productUpdated;
   }
