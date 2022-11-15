@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { instanceToInstance } from 'class-transformer';
 
 import CreateSessionsService from '../services/create-sessions-service';
 
@@ -12,7 +13,7 @@ class CreateSessionsController {
       password,
     });
 
-    return response.status(200).json(user);
+    return response.status(200).json(instanceToInstance(user));
   }
 }
 

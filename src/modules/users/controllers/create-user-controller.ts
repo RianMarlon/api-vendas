@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { instanceToInstance } from 'class-transformer';
 
 import CreateUserService from '../services/create-user-service';
 
@@ -13,7 +14,7 @@ class CreateUserController {
       password,
     });
 
-    return response.status(201).json(user);
+    return response.status(201).json(instanceToInstance(user));
   }
 }
 

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { instanceToInstance } from 'class-transformer';
 
 import ListUsersService from '../services/list-users-service';
 
@@ -9,7 +10,7 @@ class ListUsersController {
     const listUsersService = new ListUsersService();
     const users = await listUsersService.execute(Number(page), Number(limit));
 
-    return response.status(200).json(users);
+    return response.status(200).json(instanceToInstance(users));
   }
 }
 

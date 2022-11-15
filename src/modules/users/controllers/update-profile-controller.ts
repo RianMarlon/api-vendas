@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { instanceToInstance } from 'class-transformer';
+
 import UpdateProfileService from '../services/update-profile-service';
 
 class UpdateProfileController {
@@ -14,7 +16,7 @@ class UpdateProfileController {
       oldPassword,
     });
 
-    return response.status(200).json(user);
+    return response.status(200).json(instanceToInstance(user));
   }
 }
 
