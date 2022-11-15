@@ -1,12 +1,18 @@
 import { getRepository } from 'typeorm';
 
+import { IPaginationOptions } from '@shared/interfaces/pagination-options.interface';
+import { IPagination } from '@shared/interfaces/pagination.interface';
+import pagination from '@shared/utils/pagination';
+
 import User from '../entities/user';
 
 class UsersRepository {
   private readonly repository = getRepository(User);
 
-  async findAll(): Promise<User[]> {
-    return await this.repository.find();
+  async findAll(
+    paginationOptions: IPaginationOptions<User>,
+  ): Promise<IPagination<User>> {
+    return await pagination<User>(this.repository, paginationOptions);
   }
 
   async findByName(name: string): Promise<User | undefined> {
