@@ -1,12 +1,18 @@
 import { getRepository, In } from 'typeorm';
 
+import { IPagination } from '@shared/interfaces/pagination.interface';
+import { IPaginationOptions } from '@shared/interfaces/pagination-options.interface';
+import pagination from '@shared/utils/pagination';
+
 import Product from '../entities/product';
 
 class ProductsRepository {
   private readonly repository = getRepository(Product);
 
-  async findAll(): Promise<Product[]> {
-    return await this.repository.find();
+  async findAll(
+    paginationOptions: IPaginationOptions<Product>,
+  ): Promise<IPagination<Product>> {
+    return await pagination<Product>(this.repository, paginationOptions);
   }
 
   async findAllByIds(ids: string[]): Promise<Product[]> {
