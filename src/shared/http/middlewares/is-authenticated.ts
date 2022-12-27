@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { verify } from 'jsonwebtoken';
+import { JwtPayload, verify } from 'jsonwebtoken';
+import { getClientIp } from 'request-ip';
 
 import AppError from '@shared/errors/app-error';
 import auth from '@config/auth';
@@ -15,10 +16,17 @@ function isAuthenticated(
   if (!token) throw new AppError('JWT Token is missing');
 
   try {
-    const tokenPayload = verify(token, auth.jwt.secret);
+    const tokenPayload = verify(token, auth.jwt.secret) as JwtPayload;
+
+    const clientIpOfTokenPayload = tokenPayload.clientIp;
+    const clientIpOfRequest = getClientIp(request);
+
+    if (clientIpOfTokenPayload !== clientIpOfRequest) {
+      throw new AppError('Invalid JWT Token');
+    }
 
     request.user = {
-      id: tokenPayload.sub as string,
+      id: tokenPayload.id,
     };
 
     return next();

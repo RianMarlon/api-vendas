@@ -11,6 +11,7 @@ import UsersRepository from '../typeorm/repositories/users-repository';
 interface IRequest {
   email: string;
   password: string;
+  ip: string | null;
 }
 
 interface IResponse {
@@ -32,10 +33,16 @@ class CreateSessionsService {
     if (!matchPassword)
       throw new AppError('The email address or password is incorrect', 401);
 
-    const token = sign({}, auth.jwt.secret, {
-      subject: user.id,
-      expiresIn: auth.jwt.expiresIn,
-    });
+    const token = sign(
+      {
+        id: user.id,
+        clientIp: data.ip,
+      },
+      auth.jwt.secret,
+      {
+        expiresIn: auth.jwt.expiresIn,
+      },
+    );
 
     return { user, token };
   }
