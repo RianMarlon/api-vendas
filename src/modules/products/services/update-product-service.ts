@@ -1,5 +1,6 @@
 import AppError from '@shared/errors/app-error';
-import RedisCache from '@shared/cache/redis-cache';
+
+import RedisClient from '@shared/redis/redis-client';
 
 import Product from '../typeorm/entities/product';
 
@@ -14,7 +15,7 @@ interface IRequest {
 class UpdateProductService {
   async execute(id: string, data: IRequest): Promise<Product> {
     const productsRepository = new ProductsRepository();
-    const redisCache = new RedisCache();
+    const redisClient = new RedisClient();
 
     const productById = await productsRepository.findById(id);
 
@@ -38,7 +39,7 @@ class UpdateProductService {
     productToUpdate.price = newProduct.price;
     productToUpdate.quantity = newProduct.quantity;
 
-    await redisCache.delete('api-vendas:products:list-all');
+    await redisClient.delete('api-vendas:products:list-all');
     const productUpdated = await productsRepository.update(id, productToUpdate);
     return productUpdated;
   }

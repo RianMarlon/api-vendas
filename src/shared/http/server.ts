@@ -4,6 +4,7 @@ import 'express-async-errors';
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import { errors } from 'celebrate';
+import cookieParser from 'cookie-parser';
 
 import '@shared/typeorm';
 import uploadConfig from '@config/upload';
@@ -17,6 +18,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(rateLimiter);
 app.use('/files', express.static(uploadConfig.directory));
 

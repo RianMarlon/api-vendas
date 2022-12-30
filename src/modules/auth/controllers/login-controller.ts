@@ -1,22 +1,29 @@
 import { Request, Response } from 'express';
 import { instanceToInstance } from 'class-transformer';
-import { getClientIp } from 'request-ip';
+import { addDays } from 'date-fns';
 
 import LoginService from '../services/login-service';
 
 class LoginController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
     const { email, password } = request.body;
-    const ip = getClientIp(request);
 
     const loginService = new LoginService();
-    const user = await loginService.execute({
+    const { user, accessToken, refreshToken } = await loginService.execute({
       email,
       password,
-      ip,
     });
 
-    return response.status(200).json(instanceToInstance(user));
+    response.cookie('refresh-token', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      expires: addDays(Date.now(), 7),
+    });
+
+    return response
+      .status(200)
+      .json({ user: instanceToInstance(user), accessToken });
   }
 }
 

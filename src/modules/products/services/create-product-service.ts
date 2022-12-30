@@ -1,5 +1,5 @@
 import AppError from '@shared/errors/app-error';
-import RedisCache from '@shared/cache/redis-cache';
+import RedisClient from '@shared/redis/redis-client';
 
 import Product from '../typeorm/entities/product';
 
@@ -14,7 +14,7 @@ interface IRequest {
 class CreateProductService {
   async execute(data: IRequest): Promise<Product> {
     const productsRepository = new ProductsRepository();
-    const redisCache = new RedisCache();
+    const redisClient = new RedisClient();
 
     const productByName = await productsRepository.findByName(data.name);
 
@@ -26,7 +26,7 @@ class CreateProductService {
     productToCreate.price = data.price;
     productToCreate.quantity = data.quantity;
 
-    await redisCache.delete('api-vendas:products:list-all');
+    await redisClient.delete('api-vendas:products:list-all');
     const productCreated = await productsRepository.create(productToCreate);
     return productCreated;
   }

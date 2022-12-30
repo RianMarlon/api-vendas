@@ -1,5 +1,5 @@
 import { IPagination } from '@shared/interfaces/pagination.interface';
-import RedisCache from '@shared/cache/redis-cache';
+import RedisClient from '@shared/redis/redis-client';
 
 import Product from '../typeorm/entities/product';
 
@@ -11,15 +11,15 @@ class ListProductsService {
     limit?: number | string,
   ): Promise<IPagination<Product>> {
     const productsRepository = new ProductsRepository();
-    const redisCache = new RedisCache();
+    const redisClient = new RedisClient();
 
-    let products = await redisCache.get<IPagination<Product>>(
+    let products = await redisClient.get<IPagination<Product>>(
       'api-vendas:products:list-all',
     );
 
     if (!products) {
       products = await productsRepository.findAll({ page, limit });
-      await redisCache.save('api-vendas:products:list-all', products);
+      await redisClient.save('api-vendas:products:list-all', products);
     }
 
     return products;

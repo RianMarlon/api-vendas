@@ -1,37 +1,31 @@
 import { Request, Response, NextFunction } from 'express';
 import { JwtPayload, verify } from 'jsonwebtoken';
-import { getClientIp } from 'request-ip';
 
 import AppError from '@shared/errors/app-error';
 import auth from '@config/auth';
 
-function isAuthenticated(
+async function isAuthenticated(
   request: Request,
   response: Response,
   next: NextFunction,
-): void {
+): Promise<void> {
   const authHeader = request.headers.authorization;
   const token = authHeader?.split(' ')[1];
 
-  if (!token) throw new AppError('JWT Token is missing');
-
   try {
-    const tokenPayload = verify(token, auth.jwt.secret) as JwtPayload;
+    if (!token) throw new AppError('Unauthorized', 401);
 
-    const clientIpOfTokenPayload = tokenPayload.clientIp;
-    const clientIpOfRequest = getClientIp(request);
-
-    if (clientIpOfTokenPayload !== clientIpOfRequest) {
-      throw new AppError('Invalid JWT Token');
-    }
+    const tokenPayload = verify(token, auth.accessTokenSecret, {
+      audience: 'urn:jwt:type:access',
+    }) as JwtPayload;
 
     request.user = {
-      id: tokenPayload.id,
+      id: tokenPayload.sub as string,
     };
 
     return next();
   } catch (error) {
-    throw new AppError('Invalid JWT Token');
+    throw new AppError('Unauthorized', 401);
   }
 }
 

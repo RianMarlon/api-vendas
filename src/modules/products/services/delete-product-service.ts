@@ -1,18 +1,18 @@
 import AppError from '@shared/errors/app-error';
-import RedisCache from '@shared/cache/redis-cache';
 
 import ProductsRepository from '../typeorm/repositories/products-repository';
+import RedisClient from '@shared/redis/redis-client';
 
 class DeleteProductService {
   async execute(id: string): Promise<void> {
     const productsRepository = new ProductsRepository();
-    const redisCache = new RedisCache();
+    const redisClient = new RedisClient();
 
     const productById = await productsRepository.findById(id);
 
     if (!productById) throw new AppError('Product not found');
 
-    await redisCache.delete('api-vendas:products:list-all');
+    await redisClient.delete('api-vendas:products:list-all');
     await productsRepository.delete(id);
   }
 }
