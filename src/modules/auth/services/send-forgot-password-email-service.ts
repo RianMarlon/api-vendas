@@ -6,8 +6,8 @@ import Mailtrap from '@config/mail/mailtrap';
 import SESMail from '@config/mail/ses';
 import mailConfig from '@config/mail/mail';
 
-import UsersRepository from '../typeorm/repositories/users-repository';
-import UsersTokensRepository from '../typeorm/repositories/users-tokens-repository';
+import UsersRepository from '@modules/users/typeorm/repositories/users-repository';
+import UsersTokensRepository from '@modules/users/typeorm/repositories/users-tokens-repository';
 
 interface IRequest {
   email: string;
@@ -26,6 +26,8 @@ class SendForgotPasswordEmailService {
 
     const templateFile = path.resolve(
       __dirname,
+      '..',
+      '..',
       '..',
       'templates',
       'forgot-password.hbs',
