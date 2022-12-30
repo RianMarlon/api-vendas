@@ -2,17 +2,15 @@ import { Request, Response } from 'express';
 import { instanceToInstance } from 'class-transformer';
 import { getClientIp } from 'request-ip';
 
-import CreateSessionsService from '../services/create-sessions-service';
+import LoginService from '../services/login-service';
 
-class CreateSessionsController {
+class LoginController {
   async handleRequest(request: Request, response: Response): Promise<Response> {
     const { email, password } = request.body;
     const ip = getClientIp(request);
 
-    console.log(ip);
-
-    const createSessionsService = new CreateSessionsService();
-    const user = await createSessionsService.execute({
+    const loginService = new LoginService();
+    const user = await loginService.execute({
       email,
       password,
       ip,
@@ -22,4 +20,4 @@ class CreateSessionsController {
   }
 }
 
-export default CreateSessionsController;
+export default LoginController;

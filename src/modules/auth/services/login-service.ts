@@ -1,12 +1,13 @@
-import AppError from '@shared/errors/app-error';
-import Hash from '@shared/utils/hash';
 import { sign } from 'jsonwebtoken';
 
 import auth from '@config/auth';
 
-import User from '../typeorm/entities/user';
+import AppError from '@shared/errors/app-error';
+import Hash from '@shared/utils/hash';
 
-import UsersRepository from '../typeorm/repositories/users-repository';
+import User from '@modules/users/typeorm/entities/user';
+
+import UsersRepository from '@modules/users/typeorm/repositories/users-repository';
 
 interface IRequest {
   email: string;
@@ -19,7 +20,7 @@ interface IResponse {
   token: string;
 }
 
-class CreateSessionsService {
+class LoginService {
   async execute(data: IRequest): Promise<IResponse> {
     const usersRepository = new UsersRepository();
     const user = await usersRepository.findByEmail(data.email);
@@ -48,4 +49,4 @@ class CreateSessionsService {
   }
 }
 
-export default CreateSessionsService;
+export default LoginService;
