@@ -4,6 +4,6 @@ export interface IPaginationOptions<T> {
   page?: number | string;
   limit?: number | string;
   where?: FindConditions<T>[] | FindConditions<T>;
-  sortBy?: { [column: string]: 'DESC' | 'ASC' };
+  sortBy?: { [P in keyof T]: 'DESC' | 'ASC' };
   relations?: string[];
 }
