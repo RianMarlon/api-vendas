@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { instanceToInstance } from 'class-transformer';
-import { addDays } from 'date-fns';
 
 import LoginService from '../services/login-service';
 
@@ -14,16 +13,9 @@ class LoginController {
       password,
     });
 
-    response.cookie('refresh-token', refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      expires: addDays(Date.now(), 7),
-    });
-
     return response
       .status(200)
-      .json({ user: instanceToInstance(user), accessToken });
+      .json({ user: instanceToInstance(user), accessToken, refreshToken });
   }
 }
 

@@ -16,7 +16,7 @@ class LogoutService {
     );
 
     if (!refreshTokenByHash) throw new AppError('Unathorized', 401);
-    await deleteRefreshTokenService.execute(rrefreshToken);
+    await deleteRefreshTokenService.execute(refreshToken);
   }
 }
 

@@ -12,7 +12,7 @@ class GenerateAccessTokenService {
       {
         audience: 'urn:jwt:type:access',
         issuer: 'urn:system:token-issuer:type:access',
-        expiresIn: '15m',
+        expiresIn: '30m',
       },
     );
     return accessToken;
