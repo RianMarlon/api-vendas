@@ -5,8 +5,8 @@ module.exports = {
   username: process.env.TYPEORM_USERNAME,
   password: process.env.TYPEORM_PASSWORD,
   database: process.env.TYPEORM_DATABASE,
-  entities: ["./src/modules/**/typeorm/entities/*.ts"],
-  migrations: ["./src/shared/typeorm/migrations/*.ts"],
+  entities: ["./src/modules/**/typeorm/entities/*.ts,*.js"],
+  migrations: ["./src/shared/typeorm/migrations/*.ts,*js"],
   cli: {
     migrationsDir: "./src/shared/typeorm/migrations"
   },
