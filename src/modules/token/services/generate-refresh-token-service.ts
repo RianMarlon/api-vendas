@@ -34,7 +34,7 @@ class GenerateRefreshTokenService {
       .digest('hex');
 
     const refreshTokenExpiresIn = addDays(Date.now(), 7).getTime();
-    await redisClient.saveWithExpiration(
+    await redisClient.save(
       `token:${refreshTokenHash}`,
       {
         userId: userById.id,
