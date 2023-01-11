@@ -1,9 +1,9 @@
 import AppError from '@shared/errors/app-error';
 import Hash from '@shared/utils/hash';
 
-import User from '@modules/users/typeorm/entities/user';
+import User from '@modules/users/infra/typeorm/entities/user';
 
-import UsersRepository from '@modules/users/typeorm/repositories/users-repository';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/users-repository';
 
 import GenerateRefreshTokenService from '@modules/token/services/generate-refresh-token-service';
 import GenerateAccessTokenService from '@modules/token/services/generate-access-token-service';

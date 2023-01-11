@@ -23,7 +23,7 @@ export default class RedisClient {
   public async save(
     key: string,
     value: unknown,
-    expiresAtInMilliseconds: number,
+    expiresAtInMilliseconds?: number,
   ): Promise<void> {
     await this.client.set(key, JSON.stringify(value));
 

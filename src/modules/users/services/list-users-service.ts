@@ -1,8 +1,7 @@
-import User from '../typeorm/entities/user';
-
 import { IPagination } from '@shared/interfaces/pagination.interface';
 
-import UsersRepository from '../typeorm/repositories/users-repository';
+import User from '../infra/typeorm/entities/user';
+import UsersRepository from '../infra/typeorm/repositories/users-repository';
 
 class ListUsersService {
   async execute(

@@ -1,6 +1,7 @@
 import AppError from '@shared/errors/app-error';
-import Customer from '../typeorm/entities/customer';
-import CustomersRepository from '../typeorm/repositories/customers-repository';
+
+import Customer from '../infra/typeorm/entities/customer';
+import CustomersRepository from '../infra/typeorm/repositories/customers-repository';
 
 class ShowCustomerService {
   async execute(id: string): Promise<Customer | undefined> {

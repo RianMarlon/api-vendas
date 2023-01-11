@@ -1,9 +1,9 @@
 import AppError from '@shared/errors/app-error';
 import Hash from '@shared/utils/hash';
 
-import User from '../typeorm/entities/user';
+import User from '../infra/typeorm/entities/user';
 
-import UsersRepository from '../typeorm/repositories/users-repository';
+import UsersRepository from '../infra/typeorm/repositories/users-repository';
 
 interface IRequest {
   name: string;

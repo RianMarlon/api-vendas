@@ -4,9 +4,9 @@ import AppError from '@shared/errors/app-error';
 import DiskStorageProvider from '@shared/providers/storage-provider/disk-storage-provider';
 import S3StorageProvider from '@shared/providers/storage-provider/s3-storage';
 
-import User from '../typeorm/entities/user';
+import User from '../infra/typeorm/entities/user';
 
-import UsersRepository from '../typeorm/repositories/users-repository';
+import UsersRepository from '../infra/typeorm/repositories/users-repository';
 
 interface IRequest {
   avatarFilename: string;

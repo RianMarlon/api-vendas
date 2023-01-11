@@ -1,8 +1,8 @@
 import AppError from '@shared/errors/app-error';
 
-import Order from '../typeorm/entities/order';
+import Order from '../infra/typeorm/entities/order';
 
-import OrdersRepository from '../typeorm/repositories/orders-repository';
+import OrdersRepository from '../infra/typeorm/repositories/orders-repository';
 
 class ShowOrderService {
   async execute(id: string): Promise<Order | undefined> {

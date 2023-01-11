@@ -3,8 +3,8 @@ import { isAfter, isBefore, addHours } from 'date-fns';
 import AppError from '@shared/errors/app-error';
 import Hash from '@shared/utils/hash';
 
-import UsersRepository from '@modules/users/typeorm/repositories/users-repository';
-import UsersTokensRepository from '@modules/users/typeorm/repositories/users-tokens-repository';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/users-repository';
+import UsersTokensRepository from '@modules/users/infra/typeorm/repositories/users-tokens-repository';
 
 interface IRequest {
   token: string;

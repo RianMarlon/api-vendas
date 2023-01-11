@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/app-error';
 
-import ProductsRepository from '../typeorm/repositories/products-repository';
+import ProductsRepository from '../infra/typeorm/repositories/products-repository';
 import RedisClient from '@shared/redis/redis-client';
 
 class DeleteProductService {

@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/app-error';
 
-import CustomersRepository from '../typeorm/repositories/customers-repository';
+import CustomersRepository from '../infra/typeorm/repositories/customers-repository';
 
 class DeleteCustomerService {
   async execute(id: string): Promise<void> {

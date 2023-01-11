@@ -6,8 +6,8 @@ import Mailtrap from '@config/mail/mailtrap';
 import SESMail from '@config/mail/ses';
 import mailConfig from '@config/mail/mail';
 
-import UsersRepository from '@modules/users/typeorm/repositories/users-repository';
-import UsersTokensRepository from '@modules/users/typeorm/repositories/users-tokens-repository';
+import UsersRepository from '@modules/users/infra/typeorm/repositories/users-repository';
+import UsersTokensRepository from '@modules/users/infra/typeorm/repositories/users-tokens-repository';
 
 interface IRequest {
   email: string;

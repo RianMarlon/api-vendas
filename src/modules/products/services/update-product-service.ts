@@ -2,9 +2,9 @@ import AppError from '@shared/errors/app-error';
 
 import RedisClient from '@shared/redis/redis-client';
 
-import Product from '../typeorm/entities/product';
+import Product from '../infra/typeorm/entities/product';
 
-import ProductsRepository from '../typeorm/repositories/products-repository';
+import ProductsRepository from '../infra/typeorm/repositories/products-repository';
 
 interface IRequest {
   name: string;
