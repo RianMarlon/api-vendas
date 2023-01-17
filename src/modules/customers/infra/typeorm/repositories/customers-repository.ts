@@ -1,15 +1,19 @@
-import { getRepository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
-import { IPaginationOptions } from '@shared/interfaces/pagination-options.interface';
-import { IPagination } from '@shared/interfaces/pagination.interface';
-import pagination from '@shared/utils/pagination';
+import { IPaginationOptions } from '@shared/infra/typeorm/pagination/interfaces/pagination-options.interface';
+import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
+import pagination from '@shared/infra/typeorm/pagination';
 
 import Customer from '../entities/customer';
 
 import { ICustomersRepository } from '@modules/customers/domain/repositories/customers-repository.interface';
 
 class CustomersRepository implements ICustomersRepository {
-  private readonly repository = getRepository(Customer);
+  private repository: Repository<Customer>;
+
+  constructor() {
+    this.repository = getRepository(Customer);
+  }
 
   async findAll(
     paginationOptions: IPaginationOptions<Customer>,

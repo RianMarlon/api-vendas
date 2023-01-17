@@ -1,14 +1,18 @@
-import { getRepository, In } from 'typeorm';
+import { getRepository, In, Repository } from 'typeorm';
 
-import { IPagination } from '@shared/interfaces/pagination.interface';
-import { IPaginationOptions } from '@shared/interfaces/pagination-options.interface';
-import pagination from '@shared/utils/pagination';
+import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
+import { IPaginationOptions } from '@shared/infra/typeorm/pagination/interfaces/pagination-options.interface';
+import pagination from '@shared/infra/typeorm/pagination';
 
 import Product from '../entities/product';
 import { IProductsRepository } from '../../../domain/repositories/products-repository.interface';
 
 class ProductsRepository implements IProductsRepository {
-  private readonly repository = getRepository(Product);
+  private repository: Repository<Product>;
+
+  constructor() {
+    this.repository = getRepository(Product);
+  }
 
   async findAll(
     paginationOptions: IPaginationOptions<Product>,

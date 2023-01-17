@@ -1,4 +1,4 @@
-import { IPagination } from '@shared/interfaces/pagination.interface';
+import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
 
 import User from '../infra/typeorm/entities/user';
 import UsersRepository from '../infra/typeorm/repositories/users-repository';

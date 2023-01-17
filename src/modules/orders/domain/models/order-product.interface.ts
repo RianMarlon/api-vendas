@@ -1,4 +1,4 @@
-import { IProduct } from '@modules/products/domain/product.interface';
+import { IProduct } from '@modules/products/domain/models/product.interface';
 import { IOrder } from './order.interface';
 
 export interface IOrderProduct {

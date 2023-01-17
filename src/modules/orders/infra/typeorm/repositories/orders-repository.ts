@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import { ICreateOrder } from '@modules/orders/domain/models/create-order.interface';
 import { IOrdersRepository } from '@modules/orders/domain/repositories/orders-repository.interface';
@@ -6,7 +6,11 @@ import { IOrdersRepository } from '@modules/orders/domain/repositories/orders-re
 import Order from '../entities/order';
 
 class OrdersRepository implements IOrdersRepository {
-  private readonly repository = getRepository(Order);
+  private repository: Repository<Order>;
+
+  constructor() {
+    this.repository = getRepository(Order);
+  }
 
   async findById(id: string): Promise<Order | undefined> {
     return await this.repository.findOne({

@@ -1,8 +1,8 @@
 import { getRepository } from 'typeorm';
 
-import { IPaginationOptions } from '@shared/interfaces/pagination-options.interface';
-import { IPagination } from '@shared/interfaces/pagination.interface';
-import pagination from '@shared/utils/pagination';
+import { IPaginationOptions } from '@shared/infra/typeorm/pagination/interfaces/pagination-options.interface';
+import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
+import pagination from '@shared/infra/typeorm/pagination';
 
 import User from '../entities/user';
 

@@ -1,5 +1,5 @@
-import { IPagination } from '@shared/interfaces/pagination.interface';
 import RedisClient from '@shared/redis/redis-client';
+import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
 
 import Product from '../infra/typeorm/entities/product';
 

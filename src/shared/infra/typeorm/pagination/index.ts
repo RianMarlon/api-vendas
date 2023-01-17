@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 
-import { IPaginationMetadata } from '../interfaces/pagination-metadata.interface';
-import { IPagination } from '../interfaces/pagination.interface';
-import { IPaginationOptions } from '../interfaces/pagination-options.interface';
+import { IPaginationMetadata } from './interfaces/pagination-metadata.interface';
+import { IPagination } from './interfaces/pagination.interface';
+import { IPaginationOptions } from './interfaces/pagination-options.interface';
 
 async function pagination<PaginationObject>(
   repository: Repository<PaginationObject>,

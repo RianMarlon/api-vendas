@@ -1,5 +1,5 @@
-import { IPaginationOptions } from '@shared/interfaces/pagination-options.interface';
-import { IPagination } from '@shared/interfaces/pagination.interface';
+import { IPaginationOptions } from '@shared/infra/typeorm/pagination/interfaces/pagination-options.interface';
+import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
 import { ICreateProduct } from '../models/create-product.interface';
 import { IProduct } from '../models/product.interface';
 
