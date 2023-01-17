@@ -6,7 +6,9 @@ import pagination from '@shared/utils/pagination';
 
 import Customer from '../entities/customer';
 
-class CustomersRepository {
+import { ICustomersRepository } from '@modules/customers/domain/repositories/customers-repository.interface';
+
+class CustomersRepository implements ICustomersRepository {
   private readonly repository = getRepository(Customer);
 
   async findAll(

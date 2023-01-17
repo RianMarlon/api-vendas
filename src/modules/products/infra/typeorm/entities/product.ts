@@ -10,9 +10,10 @@ import {
 import { UUID } from '@shared/utils/uuid';
 
 import OrderProduct from '@modules/orders/infra/typeorm/entities/order-product';
+import { IProduct } from '@modules/products/domain/models/product.interface';
 
 @Entity('products')
-class Product {
+class Product implements IProduct {
   @PrimaryColumn()
   id: string;
 

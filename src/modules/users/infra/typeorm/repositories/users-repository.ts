@@ -6,7 +6,9 @@ import pagination from '@shared/utils/pagination';
 
 import User from '../entities/user';
 
-class UsersRepository {
+import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
+
+class UsersRepository implements IUsersRepository {
   private readonly repository = getRepository(User);
 
   async findAll(

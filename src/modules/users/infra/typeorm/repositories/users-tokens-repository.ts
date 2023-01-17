@@ -2,7 +2,9 @@ import { getRepository } from 'typeorm';
 
 import UserToken from '../entities/user-token';
 
-class UsersTokensRepository {
+import { IUsersTokensRepository } from '@modules/users/domain/repositories/users-tokens-repository.interface';
+
+class UsersTokensRepository implements IUsersTokensRepository {
   private readonly repository = getRepository(UserToken);
 
   async findByToken(token: string): Promise<UserToken | undefined> {

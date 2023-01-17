@@ -8,8 +8,10 @@ import {
 
 import { UUID } from '@shared/utils/uuid';
 
+import { ICustomer } from '@modules/customers/domain/models/customer.interface';
+
 @Entity('customers')
-class Customer {
+class Customer implements ICustomer {
   @PrimaryColumn()
   id: string;
 

@@ -1,25 +1,8 @@
-import { Repository, SelectQueryBuilder } from 'typeorm';
-
-import { camelCaseToSnakeCase } from './camel-case-to-snake-case';
+import { Repository } from 'typeorm';
 
 import { IPaginationMetadata } from '../interfaces/pagination-metadata.interface';
 import { IPagination } from '../interfaces/pagination.interface';
 import { IPaginationOptions } from '../interfaces/pagination-options.interface';
-
-function tableName(alias: string, path: string): string {
-  return `${alias}_${path.replace('.', '_')}`;
-}
-
-function tableWithField(alias: string, path: string): string {
-  const pathSplitted = path.split('.');
-  const field = pathSplitted.pop();
-
-  if (pathSplitted.length > 0) {
-    return `${alias}_${pathSplitted.join('_')}.${field}`;
-  }
-
-  return `${alias}.${field}`;
-}
 
 async function pagination<PaginationObject>(
   repository: Repository<PaginationObject>,

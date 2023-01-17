@@ -9,8 +9,10 @@ import { Exclude, Expose } from 'class-transformer';
 
 import { UUID } from '@shared/utils/uuid';
 
+import { IUser } from '../../../domain/models/user.interface';
+
 @Entity('users')
-class User {
+class User implements IUser {
   @PrimaryColumn()
   id: string;
 

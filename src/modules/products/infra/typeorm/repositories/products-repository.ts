@@ -5,8 +5,9 @@ import { IPaginationOptions } from '@shared/interfaces/pagination-options.interf
 import pagination from '@shared/utils/pagination';
 
 import Product from '../entities/product';
+import { IProductsRepository } from '../../../domain/repositories/products-repository.interface';
 
-class ProductsRepository {
+class ProductsRepository implements IProductsRepository {
   private readonly repository = getRepository(Product);
 
   async findAll(
@@ -60,7 +61,7 @@ class ProductsRepository {
     return productUpdated;
   }
 
-  async updateProducts(productsToUpdate: Product[]) {
+  async updateProducts(productsToUpdate: Product[]): Promise<Product[]> {
     await this.repository.save(productsToUpdate);
     return productsToUpdate;
   }

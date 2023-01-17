@@ -13,8 +13,10 @@ import { UUID } from '@shared/utils/uuid';
 import Product from '@modules/products/infra/typeorm/entities/product';
 import Order from './order';
 
+import { IOrderProduct } from '@modules/orders/domain/models/order-product.interface';
+
 @Entity('orders_products')
-class OrderProduct {
+class OrderProduct implements IOrderProduct {
   @PrimaryColumn()
   id: string;
 

@@ -8,8 +8,10 @@ import {
 
 import { UUID } from '@shared/utils/uuid';
 
+import { IUserToken } from '../../../domain/models/user-token.interface';
+
 @Entity('users_tokens')
-class UserToken {
+class UserToken implements IUserToken {
   @PrimaryColumn()
   id: string;
 

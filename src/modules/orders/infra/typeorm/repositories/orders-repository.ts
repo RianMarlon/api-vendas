@@ -1,18 +1,11 @@
 import { getRepository } from 'typeorm';
 
-import Customer from '@modules/customers/infra/typeorm/entities/customer';
+import { ICreateOrder } from '@modules/orders/domain/models/create-order.interface';
+import { IOrdersRepository } from '@modules/orders/domain/repositories/orders-repository.interface';
+
 import Order from '../entities/order';
 
-interface ICreateOrder {
-  products: {
-    productId: string;
-    price: number;
-    quantity: number;
-  }[];
-  customer: Customer;
-}
-
-class OrdersRepository {
+class OrdersRepository implements IOrdersRepository {
   private readonly repository = getRepository(Order);
 
   async findById(id: string): Promise<Order | undefined> {
