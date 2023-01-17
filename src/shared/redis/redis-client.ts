@@ -3,18 +3,16 @@ import Redis, { Redis as IRedisClient } from 'ioredis';
 import cacheConfig from '@config/cache';
 
 export default class RedisClient {
-  private client: IRedisClient;
-  private static connected = false;
+  private static client: IRedisClient;
 
   constructor() {
-    this.client = new Redis(cacheConfig.config.redis);
-    if (!RedisClient.connected) {
-      RedisClient.connected = true;
+    if (!RedisClient.client) {
+      RedisClient.client = new Redis(cacheConfig.config.redis);
     }
   }
 
   public async get<T>(key: string): Promise<T | null> {
-    const value = await this.client.get(key);
+    const value = await RedisClient.client.get(key);
     if (!value) return null;
 
     return JSON.parse(value) as T;
@@ -25,16 +23,16 @@ export default class RedisClient {
     value: unknown,
     expiresAtInMilliseconds?: number,
   ): Promise<void> {
-    await this.client.set(key, JSON.stringify(value));
+    await RedisClient.client.set(key, JSON.stringify(value));
 
     if (expiresAtInMilliseconds)
-      await this.client.expireat(
+      await RedisClient.client.expireat(
         key,
         Math.floor(expiresAtInMilliseconds / 1000),
       );
   }
 
   public async delete(key: string): Promise<void> {
-    await this.client.del(key);
+    await RedisClient.client.del(key);
   }
 }
