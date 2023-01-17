@@ -66,6 +66,7 @@
     "rate-limiter-flexible": "^2.4.1",
     "redis": "^4.5.0",
     "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.7.0",
     "typeorm": "0.2.29",
     "uuid": "^8.3.2"
   }
