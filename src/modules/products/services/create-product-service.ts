@@ -1,9 +1,10 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/app-error';
 import RedisClient from '@shared/redis/redis-client';
 
-import Product from '../infra/typeorm/entities/product';
-
-import ProductsRepository from '../infra/typeorm/repositories/products-repository';
+import { IProductsRepository } from '../domain/repositories/products-repository.interface';
+import { IProduct } from '../domain/models/product.interface';
 
 interface IRequest {
   name: string;
@@ -11,23 +12,23 @@ interface IRequest {
   quantity: number;
 }
 
+@injectable()
 class CreateProductService {
-  async execute(data: IRequest): Promise<Product> {
-    const productsRepository = new ProductsRepository();
+  constructor(
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
+  ) {}
+
+  async execute(data: IRequest): Promise<IProduct> {
     const redisClient = new RedisClient();
 
-    const productByName = await productsRepository.findByName(data.name);
+    const productByName = await this.productsRepository.findByName(data.name);
 
     if (productByName)
       throw new AppError('There is already one product with this name');
 
-    const productToCreate = new Product();
-    productToCreate.name = data.name;
-    productToCreate.price = data.price;
-    productToCreate.quantity = data.quantity;
-
     await redisClient.delete('api-vendas:products:list-all');
-    const productCreated = await productsRepository.create(productToCreate);
+    const productCreated = await this.productsRepository.create(data);
     return productCreated;
   }
 }

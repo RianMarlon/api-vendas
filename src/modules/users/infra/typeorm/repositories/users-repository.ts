@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 
 import { IPaginationOptions } from '@shared/infra/typeorm/pagination/interfaces/pagination-options.interface';
 import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
@@ -9,7 +9,11 @@ import User from '../entities/user';
 import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
 
 class UsersRepository implements IUsersRepository {
-  private readonly repository = getRepository(User);
+  private readonly repository: Repository<User>;
+
+  constructor() {
+    this.repository = getRepository(User);
+  }
 
   async findAll(
     paginationOptions: IPaginationOptions<User>,

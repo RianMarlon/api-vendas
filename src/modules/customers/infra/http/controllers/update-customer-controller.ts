@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
+
 import UpdateCustomerService from '../../../services/update-customer-service';
 
 class UpdateCustomerController {
@@ -6,7 +8,7 @@ class UpdateCustomerController {
     const { id } = request.params;
     const { name, email } = request.body;
 
-    const updateCustomerService = new UpdateCustomerService();
+    const updateCustomerService = container.resolve(UpdateCustomerService);
     const customer = await updateCustomerService.execute(id, {
       name,
       email,

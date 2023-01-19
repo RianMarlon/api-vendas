@@ -1,21 +1,25 @@
+import { inject, injectable } from 'tsyringe';
+
 import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
 
-import User from '../infra/typeorm/entities/user';
-import UsersRepository from '../infra/typeorm/repositories/users-repository';
+import { IUser } from '../domain/models/user.interface';
+import { IUsersRepository } from '../domain/repositories/users-repository.interface';
 
+@injectable()
 class ListUsersService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
   async execute(
     page?: number | string,
     limit?: number | string,
-  ): Promise<IPagination<User>> {
-    const usersRepository = new UsersRepository();
-
-    const users = await usersRepository.findAll({
+  ): Promise<IPagination<IUser>> {
+    return await this.usersRepository.findAll({
       page,
       limit,
     });
-
-    return users;
   }
 }
 

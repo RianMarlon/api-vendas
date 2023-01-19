@@ -1,7 +1,10 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/app-error';
 import Hash from '@shared/utils/hash';
-import User from '../infra/typeorm/entities/user';
-import UsersRepository from '../infra/typeorm/repositories/users-repository';
+
+import { IUsersRepository } from '../domain/repositories/users-repository.interface';
+import { IUser } from '../domain/models/user.interface';
 
 interface IRequest {
   name: string;
@@ -10,11 +13,16 @@ interface IRequest {
   oldPassword?: string;
 }
 
+@injectable()
 class UpdateProfileService {
-  async execute(id: string, data: IRequest): Promise<User> {
-    const usersRepository = new UsersRepository();
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
+  async execute(id: string, data: IRequest): Promise<IUser> {
     const hash = new Hash();
-    const userById = await usersRepository.findById(id);
+    const userById = await this.usersRepository.findById(id);
 
     if (!userById) throw new AppError('User not found.');
 
@@ -25,7 +33,7 @@ class UpdateProfileService {
     };
 
     if (data.email) {
-      const userByEmail = await usersRepository.findByEmail(data.email);
+      const userByEmail = await this.usersRepository.findByEmail(data.email);
       if (userByEmail && userById.id !== userByEmail.id)
         throw new AppError('There is already one user with this email.');
     }
@@ -44,7 +52,7 @@ class UpdateProfileService {
       }
     }
 
-    const userUpdated = await usersRepository.update(id, newUser);
+    const userUpdated = await this.usersRepository.update(id, newUser);
 
     return userUpdated;
   }

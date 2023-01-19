@@ -1,19 +1,26 @@
-import AppError from '@shared/errors/app-error';
+import { inject, injectable } from 'tsyringe';
 
-import ProductsRepository from '../infra/typeorm/repositories/products-repository';
+import AppError from '@shared/errors/app-error';
 import RedisClient from '@shared/redis/redis-client';
 
+import { IProductsRepository } from '../domain/repositories/products-repository.interface';
+
+@injectable()
 class DeleteProductService {
+  constructor(
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
+  ) {}
+
   async execute(id: string): Promise<void> {
-    const productsRepository = new ProductsRepository();
     const redisClient = new RedisClient();
 
-    const productById = await productsRepository.findById(id);
+    const productById = await this.productsRepository.findById(id);
 
     if (!productById) throw new AppError('Product not found');
 
     await redisClient.delete('api-vendas:products:list-all');
-    await productsRepository.delete(id);
+    await this.productsRepository.delete(id);
   }
 }
 

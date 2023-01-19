@@ -1,17 +1,18 @@
 import { addDays } from 'date-fns';
 import { sign } from 'jsonwebtoken';
 import { createHmac } from 'crypto';
+import { container } from 'tsyringe';
 
+import auth from '@config/auth';
 import AppError from '@shared/errors/app-error';
 import RedisClient from '@shared/redis/redis-client';
-import auth from '@config/auth';
 
 import ShowProfileService from '@modules/users/services/show-profile-service';
 
 class GenerateRefreshTokenService {
   async execute(userId: string): Promise<string> {
     const redisClient = new RedisClient();
-    const showProfileService = new ShowProfileService();
+    const showProfileService = container.resolve(ShowProfileService);
 
     const userById = await showProfileService.execute(userId);
 

@@ -1,9 +1,10 @@
+import { injectable, inject } from 'tsyringe';
+
 import AppError from '@shared/errors/app-error';
 import Hash from '@shared/utils/hash';
 
-import User from '@modules/users/infra/typeorm/entities/user';
-
-import UsersRepository from '@modules/users/infra/typeorm/repositories/users-repository';
+import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
+import { IUser } from '@modules/users/domain/models/user.interface';
 
 import GenerateRefreshTokenService from '@modules/token/services/generate-refresh-token-service';
 import GenerateAccessTokenService from '@modules/token/services/generate-access-token-service';
@@ -14,17 +15,22 @@ interface IRequest {
 }
 
 interface IResponse {
-  user: User;
+  user: IUser;
   accessToken: string;
   refreshToken: string;
 }
 
+@injectable()
 class LoginService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+  ) {}
+
   async execute(data: IRequest): Promise<IResponse> {
-    const usersRepository = new UsersRepository();
     const generateAccessTokenService = new GenerateAccessTokenService();
     const generateRefreshTokenService = new GenerateRefreshTokenService();
-    const user = await usersRepository.findByEmail(data.email);
+    const user = await this.usersRepository.findByEmail(data.email);
 
     if (!user)
       throw new AppError('The email address or password is incorrect', 401);

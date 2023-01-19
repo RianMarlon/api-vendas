@@ -1,17 +1,24 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/app-error';
 
-import Customer from '../infra/typeorm/entities/customer';
-import CustomersRepository from '../infra/typeorm/repositories/customers-repository';
+import { ICustomersRepository } from '../domain/repositories/customers-repository.interface';
+import { ICustomer } from '../domain/models/customer.interface';
 
 interface IRequest {
   name: string;
   email: string;
 }
 
+@injectable()
 class UpdateCustomerService {
-  async execute(id: string, data: IRequest): Promise<Customer> {
-    const customersRepository = new CustomersRepository();
-    const customerById = await customersRepository.findById(id);
+  constructor(
+    @inject('CustomersRepository')
+    private customersRepository: ICustomersRepository,
+  ) {}
+
+  async execute(id: string, data: IRequest): Promise<ICustomer> {
+    const customerById = await this.customersRepository.findById(id);
 
     if (!customerById) throw new AppError('Customer not found.');
 
@@ -21,12 +28,17 @@ class UpdateCustomerService {
     };
 
     if (data.email) {
-      const customerByEmail = await customersRepository.findByEmail(data.email);
+      const customerByEmail = await this.customersRepository.findByEmail(
+        data.email,
+      );
       if (customerByEmail && customerById.id !== customerByEmail.id)
         throw new AppError('There is already one customer with this email.');
     }
 
-    const customerUpdated = await customersRepository.update(id, newCustomer);
+    const customerUpdated = await this.customersRepository.update(
+      id,
+      newCustomer,
+    );
 
     return customerUpdated;
   }

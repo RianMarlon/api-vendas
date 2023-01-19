@@ -1,10 +1,11 @@
+import { inject, injectable } from 'tsyringe';
+
 import AppError from '@shared/errors/app-error';
 
-import Order from '../infra/typeorm/entities/order';
-
-import CustomersRepository from '@modules/customers/infra/typeorm/repositories/customers-repository';
-import ProductsRepository from '@modules/products/infra/typeorm/repositories/products-repository';
-import OrdersRepository from '../infra/typeorm/repositories/orders-repository';
+import { IOrdersRepository } from '../domain/repositories/orders-repository.interface';
+import { ICustomersRepository } from '@modules/customers/domain/repositories/customers-repository.interface';
+import { IProductsRepository } from '@modules/products/domain/repositories/products-repository.interface';
+import { IOrder } from '../domain/models/order.interface';
 
 interface IRequest {
   customerId: string;
@@ -14,19 +15,27 @@ interface IRequest {
   }[];
 }
 
+@injectable()
 class CreateOrderService {
-  async execute({ customerId, products }: IRequest): Promise<Order> {
-    const ordersRepository = new OrdersRepository();
-    const customersRepository = new CustomersRepository();
-    const productsRepository = new ProductsRepository();
+  constructor(
+    @inject('OrdersRepository')
+    private ordersRepository: IOrdersRepository,
+    @inject('CustomersRepository')
+    private customersRepository: ICustomersRepository,
+    @inject('ProductsRepository')
+    private productsRepository: IProductsRepository,
+  ) {}
 
-    const customerById = await customersRepository.findById(customerId);
+  async execute({ customerId, products }: IRequest): Promise<IOrder> {
+    const customerById = await this.customersRepository.findById(customerId);
 
     if (!customerById)
       throw new AppError('Could not find any customer with the given id.');
 
     const productsIds = products.map(product => product.id);
-    const productsByIds = await productsRepository.findAllByIds(productsIds);
+    const productsByIds = await this.productsRepository.findAllByIds(
+      productsIds,
+    );
     const existentsProductsIds = productsByIds.map(product => product.id);
 
     if (!productsByIds.length)
@@ -60,7 +69,7 @@ class CreateOrderService {
       )[0].price,
     }));
 
-    const orderCreated = await ordersRepository.create({
+    const orderCreated = await this.ordersRepository.create({
       customer: customerById,
       products: productsToOrder,
     });
@@ -77,7 +86,7 @@ class CreateOrderService {
         quantity: product.quantity - orderProduct.quantity,
       };
     });
-    await productsRepository.updateProducts(updatedProductsQuantity);
+    await this.productsRepository.updateProducts(updatedProductsQuantity);
 
     return orderCreated;
   }

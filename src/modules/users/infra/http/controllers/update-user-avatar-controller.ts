@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 import { instanceToInstance } from 'class-transformer';
 
 import AppError from '@shared/errors/app-error';
@@ -13,7 +14,7 @@ class UpdateUserAvatarController {
       throw new AppError('Arquivo não informado');
     }
 
-    const updateUserAvatarService = new UpdateUserAvatarService();
+    const updateUserAvatarService = container.resolve(UpdateUserAvatarService);
     const user = await updateUserAvatarService.execute(id, {
       avatarFilename: request.file.filename,
     });

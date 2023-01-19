@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 import { instanceToInstance } from 'class-transformer';
 
 import UpdateProfileService from '../../../services/update-profile-service';
@@ -8,7 +9,7 @@ class UpdateProfileController {
     const { id } = request.user;
     const { name, email, password, oldPassword } = request.body;
 
-    const updateProfileService = new UpdateProfileService();
+    const updateProfileService = container.resolve(UpdateProfileService);
     const user = await updateProfileService.execute(id, {
       name,
       email,

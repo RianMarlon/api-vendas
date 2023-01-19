@@ -6,6 +6,7 @@ import cors from 'cors';
 import { errors } from 'celebrate';
 
 import '@shared/infra/typeorm';
+import '@shared/container';
 import uploadConfig from '@config/upload';
 
 import AppError from '@shared/errors/app-error';

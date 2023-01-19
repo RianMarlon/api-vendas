@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { container } from 'tsyringe';
 
 import UpdateProductService from '../../../services/update-product-service';
 
@@ -7,7 +8,7 @@ class UpdateProductController {
     const { id } = request.params;
     const { name, price, quantity } = request.body;
 
-    const updateProductService = new UpdateProductService();
+    const updateProductService = container.resolve(UpdateProductService);
     const product = await updateProductService.execute(id, {
       name,
       price,

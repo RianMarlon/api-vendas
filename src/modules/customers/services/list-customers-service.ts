@@ -1,18 +1,22 @@
+import { inject, injectable } from 'tsyringe';
+
 import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
 
-import Customer from '../infra/typeorm/entities/customer';
-import CustomersRepository from '../infra/typeorm/repositories/customers-repository';
+import { ICustomer } from '../domain/models/customer.interface';
+import { ICustomersRepository } from '../domain/repositories/customers-repository.interface';
 
+@injectable()
 class ListCustomersService {
+  constructor(
+    @inject('CustomersRepository')
+    private customersRepository: ICustomersRepository,
+  ) {}
+
   async execute(
     page?: number | string,
     limit?: number | string,
-  ): Promise<IPagination<Customer>> {
-    const customersRepository = new CustomersRepository();
-
-    const customers = await customersRepository.findAll({ page, limit });
-
-    return customers;
+  ): Promise<IPagination<ICustomer>> {
+    return await this.customersRepository.findAll({ page, limit });
   }
 }
 

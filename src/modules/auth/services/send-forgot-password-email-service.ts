@@ -1,3 +1,4 @@
+import { inject, injectable } from 'tsyringe';
 import path from 'path';
 
 import AppError from '@shared/errors/app-error';
@@ -6,23 +7,28 @@ import Mailtrap from '@config/mail/mailtrap';
 import SESMail from '@config/mail/ses';
 import mailConfig from '@config/mail/mail';
 
-import UsersRepository from '@modules/users/infra/typeorm/repositories/users-repository';
-import UsersTokensRepository from '@modules/users/infra/typeorm/repositories/users-tokens-repository';
+import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
+import { IUsersTokensRepository } from '@modules/users/domain/repositories/users-tokens-repository.interface';
 
 interface IRequest {
   email: string;
 }
 
+@injectable()
 class SendForgotPasswordEmailService {
-  async execute(data: IRequest): Promise<void> {
-    const usersRepository = new UsersRepository();
-    const usersTokensRepository = new UsersTokensRepository();
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+    @inject('UsersTokensRepository')
+    private usersTokensRepository: IUsersTokensRepository,
+  ) {}
 
-    const userByEmail = await usersRepository.findByEmail(data.email);
+  async execute(data: IRequest): Promise<void> {
+    const userByEmail = await this.usersRepository.findByEmail(data.email);
 
     if (!userByEmail) throw new AppError('User does not exists');
 
-    const { token } = await usersTokensRepository.generate(userByEmail.id);
+    const { token } = await this.usersTokensRepository.generate(userByEmail.id);
 
     const templateFile = path.resolve(
       __dirname,
