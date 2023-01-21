@@ -1,4 +1,3 @@
-import { addDays } from 'date-fns';
 import { sign } from 'jsonwebtoken';
 import { createHmac } from 'crypto';
 import { container } from 'tsyringe';
@@ -26,7 +25,7 @@ class GenerateRefreshTokenService {
       {
         audience: 'urn:jwt:type:refresh',
         issuer: 'urn:system:token-issuer:type:refresh',
-        expiresIn: '1h',
+        expiresIn: `${auth.refreshTokenDurationMinutes}m`,
       },
     );
 
@@ -34,13 +33,12 @@ class GenerateRefreshTokenService {
       .update(refreshToken)
       .digest('hex');
 
-    const refreshTokenExpiresIn = addDays(Date.now(), 7).getTime();
     await redisClient.save(
       `token:${refreshTokenHash}`,
       {
         userId: userById.id,
       },
-      refreshTokenExpiresIn,
+      auth.refreshTokenDurationMinutes * 60,
     );
 
     return refreshToken;

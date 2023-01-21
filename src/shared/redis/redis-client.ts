@@ -21,15 +21,18 @@ export default class RedisClient {
   public async save(
     key: string,
     value: unknown,
-    expiresAtInMilliseconds?: number,
+    expiresAtInSeconds?: number,
   ): Promise<void> {
-    await RedisClient.client.set(key, JSON.stringify(value));
-
-    if (expiresAtInMilliseconds)
-      await RedisClient.client.expireat(
+    if (expiresAtInSeconds) {
+      await RedisClient.client.setex(
         key,
-        Math.floor(expiresAtInMilliseconds / 1000),
+        expiresAtInSeconds,
+        JSON.stringify(value),
       );
+      return;
+    }
+
+    await RedisClient.client.set(key, JSON.stringify(value));
   }
 
   public async delete(key: string): Promise<void> {
