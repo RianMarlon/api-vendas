@@ -1,21 +1,19 @@
 import { Repository } from 'typeorm';
 
-import { IPaginationMetadata } from './interfaces/pagination-metadata.interface';
-import { IPagination } from './interfaces/pagination.interface';
-import { IPaginationOptions } from './interfaces/pagination-options.interface';
+import { IPaginationMetadata } from '@shared/domain/models/pagination-metadata.interface';
+import { IPaginationOptions } from '@shared/domain/models/pagination-options.interface';
+import { IPagination } from '@shared/domain/models/pagination.interface';
 
 async function pagination<PaginationObject>(
   repository: Repository<PaginationObject>,
-  paginationOptions: IPaginationOptions<PaginationObject>,
+  paginationOptions: IPaginationOptions,
 ): Promise<IPagination<PaginationObject>> {
-  const { where, sortBy, relations } = paginationOptions;
+  const { relations } = paginationOptions;
   const limit = Number(paginationOptions.limit) || 50;
   const page = Number(paginationOptions.page) || 1;
 
   const [items, totalItems] = await repository.findAndCount({
     relations,
-    where,
-    order: sortBy,
     take: limit,
     skip: (page - 1) * limit,
   });

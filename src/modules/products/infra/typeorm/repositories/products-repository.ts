@@ -1,7 +1,7 @@
 import { getRepository, In, Repository } from 'typeorm';
 
-import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
-import { IPaginationOptions } from '@shared/infra/typeorm/pagination/interfaces/pagination-options.interface';
+import { IPagination } from '@shared/domain/models/pagination.interface';
+import { IPaginationOptions } from '@shared/domain/models/pagination-options.interface';
 import pagination from '@shared/infra/typeorm/pagination';
 
 import Product from '../entities/product';
@@ -15,7 +15,7 @@ class ProductsRepository implements IProductsRepository {
   }
 
   async findAll(
-    paginationOptions: IPaginationOptions<Product>,
+    paginationOptions: IPaginationOptions,
   ): Promise<IPagination<Product>> {
     return await pagination<Product>(this.repository, paginationOptions);
   }

@@ -1,7 +1,7 @@
 import { getRepository, Repository } from 'typeorm';
 
-import { IPaginationOptions } from '@shared/infra/typeorm/pagination/interfaces/pagination-options.interface';
-import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
+import { IPaginationOptions } from '@shared/domain/models/pagination-options.interface';
+import { IPagination } from '@shared/domain/models/pagination.interface';
 import pagination from '@shared/infra/typeorm/pagination';
 
 import User from '../entities/user';
@@ -16,7 +16,7 @@ class UsersRepository implements IUsersRepository {
   }
 
   async findAll(
-    paginationOptions: IPaginationOptions<User>,
+    paginationOptions: IPaginationOptions,
   ): Promise<IPagination<User>> {
     return await pagination<User>(this.repository, paginationOptions);
   }

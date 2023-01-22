@@ -1,12 +1,12 @@
-import { IPaginationOptions } from '@shared/infra/typeorm/pagination/interfaces/pagination-options.interface';
-import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
+import { IPaginationOptions } from '@shared/domain/models/pagination-options.interface';
+import { IPagination } from '@shared/domain/models/pagination.interface';
 
 import { ICustomer } from '../models/customer.interface';
 import { ICreateCustomer } from '../models/create-customer.interface';
 
 export interface ICustomersRepository {
   findAll(
-    paginationOptions: IPaginationOptions<ICustomer>,
+    paginationOptions: IPaginationOptions,
   ): Promise<IPagination<ICustomer>>;
   findByName(name: string): Promise<ICustomer | undefined>;
   findByEmail(email: string): Promise<ICustomer | undefined>;

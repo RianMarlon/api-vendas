@@ -1,7 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 
-import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
-
+import { IPagination } from '@shared/domain/models/pagination.interface';
 import { ICustomer } from '../domain/models/customer.interface';
 import { ICustomersRepository } from '../domain/repositories/customers-repository.interface';
 

@@ -1,11 +1,11 @@
-import { IPaginationOptions } from '@shared/infra/typeorm/pagination/interfaces/pagination-options.interface';
-import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
+import { IPaginationOptions } from '@shared/domain/models/pagination-options.interface';
+import { IPagination } from '@shared/domain/models/pagination.interface';
 import { ICreateProduct } from '../models/create-product.interface';
 import { IProduct } from '../models/product.interface';
 
 export interface IProductsRepository {
   findAll(
-    paginationOptions: IPaginationOptions<IProduct>,
+    paginationOptions: IPaginationOptions,
   ): Promise<IPagination<IProduct>>;
   findAllByIds(ids: string[]): Promise<IProduct[]>;
   findByName(name: string): Promise<IProduct | undefined>;

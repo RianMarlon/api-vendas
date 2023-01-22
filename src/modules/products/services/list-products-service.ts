@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
 import RedisClient from '@shared/redis/redis-client';
-import { IPagination } from '@shared/infra/typeorm/pagination/interfaces/pagination.interface';
+import { IPagination } from '@shared/domain/models/pagination.interface';
 
 import { IProductsRepository } from '../domain/repositories/products-repository.interface';
 import { IProduct } from '../domain/models/product.interface';
