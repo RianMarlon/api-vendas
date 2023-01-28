@@ -12,5 +12,5 @@ export default {
     prefix: '<rootDir>/',
   }),
   preset: 'ts-jest',
-  testMatch: ['**/*.spec.ts'],
+  testMatch: ['**/*.test.ts'],
 };
