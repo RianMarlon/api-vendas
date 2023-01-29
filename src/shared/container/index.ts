@@ -1,8 +1,13 @@
 import { container } from 'tsyringe';
 
+import uploadConfig from '@config/upload';
+
 import { IHashProvider } from '@shared/providers/hash/models/hash-provider.interface';
+import { IStorageProvider } from '@shared/providers/storage/models/storage-provider.interface';
 
 import BcryptHashProvider from '@shared/providers/hash/implementations/bcrypt-hash-provider';
+import S3StorageProvider from '@shared/providers/storage/implementations/s3-storage-provider';
+import DiskStorageProvider from '@shared/providers/storage/implementations/disk-storage-provider';
 
 import { ICustomersRepository } from '@modules/customers/domain/repositories/customers-repository.interface';
 import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
@@ -42,3 +47,8 @@ container.registerSingleton<IOrdersRepository>(
 );
 
 container.registerSingleton<IHashProvider>('HashProvider', BcryptHashProvider);
+
+container.registerSingleton<IStorageProvider>(
+  'StorageProvider',
+  uploadConfig.driver === 's3' ? S3StorageProvider : DiskStorageProvider,
+);
