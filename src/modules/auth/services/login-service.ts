@@ -1,7 +1,8 @@
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/app-error';
-import Hash from '@shared/utils/hash';
+
+import { IHashProvider } from '@shared/providers/hash/models/hash-provider.interface';
 
 import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
 import { IUser } from '@modules/users/domain/models/user.interface';
@@ -25,6 +26,8 @@ class LoginService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   async execute(data: IRequest): Promise<IResponse> {
@@ -35,8 +38,10 @@ class LoginService {
     if (!user)
       throw new AppError('The email address or password is incorrect', 401);
 
-    const hash = new Hash();
-    const matchPassword = await hash.compare(data.password, user.password);
+    const matchPassword = await this.hashProvider.compare(
+      data.password,
+      user.password,
+    );
 
     if (!matchPassword)
       throw new AppError('The email address or password is incorrect', 401);

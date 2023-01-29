@@ -1,14 +1,14 @@
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/app-error';
-import Hash from '@shared/utils/hash';
 
 import { IUsersRepository } from '../domain/repositories/users-repository.interface';
 import { IUser } from '../domain/models/user.interface';
+import { IHashProvider } from '@shared/providers/hash/models/hash-provider.interface';
 
 interface IRequest {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   password?: string;
   oldPassword?: string;
 }
@@ -18,13 +18,14 @@ class UpdateProfileService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   async execute(id: string, data: IRequest): Promise<IUser> {
-    const hash = new Hash();
     const userById = await this.usersRepository.findById(id);
 
-    if (!userById) throw new AppError('User not found.');
+    if (!userById) throw new AppError('User not found');
 
     const newUser = {
       name: data.name || userById.name,
@@ -35,11 +36,11 @@ class UpdateProfileService {
     if (data.email) {
       const userByEmail = await this.usersRepository.findByEmail(data.email);
       if (userByEmail && userById.id !== userByEmail.id)
-        throw new AppError('There is already one user with this email.');
+        throw new AppError('There is already one user with this email');
     }
 
     if (data.password && data.oldPassword) {
-      const oldPasswordMatch = await hash.compare(
+      const oldPasswordMatch = await this.hashProvider.compare(
         data.oldPassword,
         userById.password,
       );
@@ -47,8 +48,7 @@ class UpdateProfileService {
       if (!oldPasswordMatch) throw new AppError('Old password does not match');
 
       if (data.password) {
-        const hash = new Hash();
-        newUser.password = await hash.generate(data.password);
+        newUser.password = await this.hashProvider.generate(data.password);
       }
     }
 

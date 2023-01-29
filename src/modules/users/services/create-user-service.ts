@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/app-error';
-import Hash from '@shared/utils/hash';
+import { IHashProvider } from '@shared/providers/hash/models/hash-provider.interface';
 
 import { IUsersRepository } from '../domain/repositories/users-repository.interface';
 import { IUser } from '../domain/models/user.interface';
@@ -17,12 +17,12 @@ class CreateUserService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   async execute(data: IRequest): Promise<IUser> {
-    data.email = data.email?.toLowerCase();
-    const hash = new Hash();
-
+    data.email = data.email.toLowerCase();
     const userByEmail = await this.usersRepository.findByEmail(data.email);
 
     if (userByEmail) throw new AppError('Email address already used');
@@ -30,7 +30,7 @@ class CreateUserService {
     const userCreated = await this.usersRepository.create({
       name: data.name,
       email: data.email.toLowerCase(),
-      password: await hash.generate(data.password),
+      password: await this.hashProvider.generate(data.password),
     });
 
     return userCreated;

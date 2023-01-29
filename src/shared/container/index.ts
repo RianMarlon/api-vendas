@@ -1,5 +1,9 @@
 import { container } from 'tsyringe';
 
+import { IHashProvider } from '@shared/providers/hash/models/hash-provider.interface';
+
+import BcryptHashProvider from '@shared/providers/hash/implementations/bcrypt-hash-provider';
+
 import { ICustomersRepository } from '@modules/customers/domain/repositories/customers-repository.interface';
 import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
 import { IUsersTokensRepository } from '@modules/users/domain/repositories/users-tokens-repository.interface';
@@ -36,3 +40,5 @@ container.registerSingleton<IOrdersRepository>(
   'OrdersRepository',
   OrdersRepository,
 );
+
+container.registerSingleton<IHashProvider>('HashProvider', BcryptHashProvider);
