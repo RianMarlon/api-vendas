@@ -1,15 +1,15 @@
 import { inject, injectable } from 'tsyringe';
 
 import AppError from '@shared/errors/app-error';
-import RedisClient from '@shared/redis/redis-client';
+import { IRedisClient } from '@shared/redis-client/models/redis-client.interface';
 
 import { IProductsRepository } from '../domain/repositories/products-repository.interface';
 import { IProduct } from '../domain/models/product.interface';
 
 interface IRequest {
-  name: string;
-  price: number;
-  quantity: number;
+  name?: string;
+  price?: number;
+  quantity?: number;
 }
 
 @injectable()
@@ -17,14 +17,14 @@ class UpdateProductService {
   constructor(
     @inject('ProductsRepository')
     private productsRepository: IProductsRepository,
+    @inject('RedisClient')
+    private redisClient: IRedisClient,
   ) {}
 
   async execute(id: string, data: IRequest): Promise<IProduct> {
-    const redisClient = new RedisClient();
-
     const productById = await this.productsRepository.findById(id);
 
-    if (!productById) throw new AppError('Product not found');
+    if (!productById) throw new AppError('Product not found', 404);
 
     if (data.name) {
       const productByName = await this.productsRepository.findByName(data.name);
@@ -38,7 +38,7 @@ class UpdateProductService {
       ...data,
     };
 
-    await redisClient.delete('api-vendas:products:list-all');
+    await this.redisClient.delete('api-vendas:products:list-all');
     const productUpdated = await this.productsRepository.update(id, {
       name: newProduct.name,
       price: newProduct.price,

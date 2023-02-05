@@ -1,21 +1,25 @@
 import { sign } from 'jsonwebtoken';
 import { createHmac } from 'crypto';
-import { container } from 'tsyringe';
+import { injectable, inject } from 'tsyringe';
 
 import auth from '@config/auth';
 import AppError from '@shared/errors/app-error';
-import RedisClient from '@shared/redis/redis-client';
+import { IRedisClient } from '@shared/redis-client/models/redis-client.interface';
 
-import ShowProfileService from '@modules/users/services/show-profile-service';
+import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
 
+@injectable()
 class GenerateRefreshTokenService {
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+    @inject('RedisClient')
+    private redisClient: IRedisClient,
+  ) {}
+
   async execute(userId: string): Promise<string> {
-    const redisClient = new RedisClient();
-    const showProfileService = container.resolve(ShowProfileService);
-
-    const userById = await showProfileService.execute(userId);
-
-    if (!userById) throw new AppError('User not exists');
+    const userById = await this.usersRepository.findById(userId);
+    if (!userById) throw new AppError('User not exists', 404);
 
     const refreshToken = sign(
       {
@@ -33,7 +37,7 @@ class GenerateRefreshTokenService {
       .update(refreshToken)
       .digest('hex');
 
-    await redisClient.save(
+    await this.redisClient.save(
       `token:${refreshTokenHash}`,
       {
         userId: userById.id,

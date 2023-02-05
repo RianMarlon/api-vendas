@@ -4,6 +4,7 @@ import uploadConfig from '@config/upload';
 
 import { IHashProvider } from '@shared/providers/hash/models/hash-provider.interface';
 import { IStorageProvider } from '@shared/providers/storage/models/storage-provider.interface';
+import { IRedisClient } from '@shared/redis-client/models/redis-client.interface';
 
 import BcryptHashProvider from '@shared/providers/hash/implementations/bcrypt-hash-provider';
 import S3StorageProvider from '@shared/providers/storage/implementations/s3-storage-provider';
@@ -20,6 +21,7 @@ import UsersRepository from '@modules/users/infra/typeorm/repositories/users-rep
 import UsersTokensRepository from '@modules/users/infra/typeorm/repositories/users-tokens-repository';
 import ProductsRepository from '@modules/products/infra/typeorm/repositories/products-repository';
 import OrdersRepository from '@modules/orders/infra/typeorm/repositories/orders-repository';
+import IORedis from '@shared/redis-client/implementations/ioredis';
 
 container.registerSingleton<ICustomersRepository>(
   'CustomersRepository',
@@ -52,3 +54,5 @@ container.registerSingleton<IStorageProvider>(
   'StorageProvider',
   uploadConfig.driver === 's3' ? S3StorageProvider : DiskStorageProvider,
 );
+
+container.registerSingleton<IRedisClient>('RedisClient', IORedis);
