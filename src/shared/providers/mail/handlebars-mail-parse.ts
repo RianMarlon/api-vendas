@@ -1,9 +1,7 @@
 import handlebars from 'handlebars';
 import fs from 'fs/promises';
 
-export interface IMailVariables {
-  [key: string]: string | number | boolean;
-}
+import { IMailVariables } from './models/mail-variables.interface';
 
 export default class HandlebarsMailParse {
   static async execute(

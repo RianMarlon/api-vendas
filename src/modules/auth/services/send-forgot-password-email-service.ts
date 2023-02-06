@@ -3,12 +3,9 @@ import path from 'path';
 
 import AppError from '@shared/errors/app-error';
 
-import Mailtrap from '@config/mail/mailtrap';
-import SESMail from '@config/mail/ses';
-import mailConfig from '@config/mail/mail';
-
 import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
 import { IUsersTokensRepository } from '@modules/users/domain/repositories/users-tokens-repository.interface';
+import { IMailProvider } from '@shared/providers/mail/models/mail-provider.interface';
 
 interface IRequest {
   email: string;
@@ -21,12 +18,14 @@ class SendForgotPasswordEmailService {
     private usersRepository: IUsersRepository,
     @inject('UsersTokensRepository')
     private usersTokensRepository: IUsersTokensRepository,
+    @inject('MailProvider')
+    private mailProvider: IMailProvider,
   ) {}
 
   async execute(data: IRequest): Promise<void> {
     const userByEmail = await this.usersRepository.findByEmail(data.email);
 
-    if (!userByEmail) throw new AppError('User does not exists');
+    if (!userByEmail) throw new AppError('User does not exists', 404);
 
     const { token } = await this.usersTokensRepository.generate(userByEmail.id);
 
@@ -39,25 +38,7 @@ class SendForgotPasswordEmailService {
       'forgot-password.hbs',
     );
 
-    if (mailConfig.driver === 'ses') {
-      SESMail.sendEmail({
-        to: {
-          name: userByEmail.name,
-          email: userByEmail.email,
-        },
-        subject: 'Redefinição de senha',
-        html: {
-          file: templateFile,
-          variables: {
-            name: userByEmail.name,
-            link: `${process.env.APP_WEB_URL}/reset-password?token=${token}`,
-          },
-        },
-      });
-      return;
-    }
-
-    Mailtrap.sendEmail({
+    await this.mailProvider.sendEmail({
       to: {
         name: userByEmail.name,
         email: userByEmail.email,

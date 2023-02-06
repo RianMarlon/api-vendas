@@ -1,9 +1,11 @@
 import { container } from 'tsyringe';
 
 import uploadConfig from '@config/upload';
+import mailConfig from '@config/mail';
 
 import { IHashProvider } from '@shared/providers/hash/models/hash-provider.interface';
 import { IStorageProvider } from '@shared/providers/storage/models/storage-provider.interface';
+import { IMailProvider } from '@shared/providers/mail/models/mail-provider.interface';
 import { IRedisClient } from '@shared/redis-client/models/redis-client.interface';
 
 import BcryptHashProvider from '@shared/providers/hash/implementations/bcrypt-hash-provider';
@@ -22,6 +24,8 @@ import UsersTokensRepository from '@modules/users/infra/typeorm/repositories/use
 import ProductsRepository from '@modules/products/infra/typeorm/repositories/products-repository';
 import OrdersRepository from '@modules/orders/infra/typeorm/repositories/orders-repository';
 import IORedis from '@shared/redis-client/implementations/ioredis';
+import SESMailProvider from '@shared/providers/mail/implementations/ses-provider';
+import MailtrapProvider from '@shared/providers/mail/implementations/mailtrap-provider';
 
 container.registerSingleton<ICustomersRepository>(
   'CustomersRepository',
@@ -56,3 +60,8 @@ container.registerSingleton<IStorageProvider>(
 );
 
 container.registerSingleton<IRedisClient>('RedisClient', IORedis);
+
+container.registerSingleton<IMailProvider>(
+  'MailProvider',
+  mailConfig.driver === 'ses' ? SESMailProvider : MailtrapProvider,
+);

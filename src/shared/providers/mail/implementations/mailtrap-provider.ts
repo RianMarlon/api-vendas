@@ -1,31 +1,14 @@
 import 'dotenv/config';
 import nodemailer from 'nodemailer';
 
-import HandlebarsMailParse, { IMailVariables } from './handlebars-mail-parse';
-import mailConfig from '@config/mail/mail';
+import HandlebarsMailParse from '../handlebars-mail-parse';
+import mailConfig from '@config/mail';
 
-interface IMailContact {
-  name: string;
-  email: string;
-}
+import { ISendMail } from '../models/send-mail.interface';
+import { IMailProvider } from '../models/mail-provider.interface';
 
-interface ISendMail {
-  to: IMailContact;
-  from?: IMailContact;
-  subject?: string;
-  html: {
-    file: string;
-    variables: IMailVariables;
-  };
-}
-
-class Mailtrap {
-  static async sendEmail({
-    to,
-    from,
-    subject,
-    html,
-  }: ISendMail): Promise<void> {
+class MailtrapProvider implements IMailProvider {
+  async sendEmail({ to, from, subject, html }: ISendMail): Promise<void> {
     const transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
       port: Number(process.env.MAIL_PORT),
@@ -52,4 +35,4 @@ class Mailtrap {
   }
 }
 
-export default Mailtrap;
+export default MailtrapProvider;

@@ -2,31 +2,13 @@ import 'dotenv/config';
 import nodemailer from 'nodemailer';
 import { SES, SendRawEmailCommand } from '@aws-sdk/client-ses';
 
-import HandlebarsMailParse, { IMailVariables } from './handlebars-mail-parse';
-import mailConfig from '@config/mail/mail';
+import HandlebarsMailParse from '../handlebars-mail-parse';
+import mailConfig from '@config/mail';
+import { IMailProvider } from '../models/mail-provider.interface';
+import { ISendMail } from '../models/send-mail.interface';
 
-interface IMailContact {
-  name: string;
-  email: string;
-}
-
-interface ISendMail {
-  to: IMailContact;
-  from?: IMailContact;
-  subject?: string;
-  html: {
-    file: string;
-    variables: IMailVariables;
-  };
-}
-
-class SESMail {
-  static async sendEmail({
-    to,
-    from,
-    subject,
-    html,
-  }: ISendMail): Promise<void> {
+class SESMailProvider implements IMailProvider {
+  async sendEmail({ to, from, subject, html }: ISendMail): Promise<void> {
     const transporter = nodemailer.createTransport({
       SES: {
         ses: new SES({
@@ -53,4 +35,4 @@ class SESMail {
   }
 }
 
-export default SESMail;
+export default SESMailProvider;
