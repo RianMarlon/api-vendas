@@ -15,6 +15,6 @@ export interface IProductsRepository {
     id: string,
     productToUpdate: Partial<ICreateProduct>,
   ): Promise<IProduct>;
-  updateProducts(productsToUpdate: ICreateProduct[]): Promise<IProduct[]>;
+  updateProducts(productsToUpdate: IProduct[]): Promise<IProduct[]>;
   delete(id: string): Promise<void>;
 }
