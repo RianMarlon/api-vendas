@@ -18,7 +18,7 @@ class CreateCustomerService {
   ) {}
 
   async execute(data: IRequest): Promise<ICustomer> {
-    data.email = data.email?.toLowerCase();
+    data.email = data.email.toLowerCase();
     const customerByEmail = await this.customersRepository.findByEmail(
       data.email,
     );

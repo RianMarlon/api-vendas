@@ -6,8 +6,8 @@ import { ICustomersRepository } from '../domain/repositories/customers-repositor
 import { ICustomer } from '../domain/models/customer.interface';
 
 interface IRequest {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
 }
 
 @injectable()
@@ -20,7 +20,7 @@ class UpdateCustomerService {
   async execute(id: string, data: IRequest): Promise<ICustomer> {
     const customerById = await this.customersRepository.findById(id);
 
-    if (!customerById) throw new AppError('Customer not found.');
+    if (!customerById) throw new AppError('Customer not found', 404);
 
     const newCustomer = {
       name: data.name || customerById.name,
@@ -32,7 +32,7 @@ class UpdateCustomerService {
         data.email,
       );
       if (customerByEmail && customerById.id !== customerByEmail.id)
-        throw new AppError('There is already one customer with this email.');
+        throw new AppError('There is already one customer with this email');
     }
 
     const customerUpdated = await this.customersRepository.update(
