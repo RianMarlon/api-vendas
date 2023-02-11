@@ -27,10 +27,29 @@ class CreateOrderService {
   ) {}
 
   async execute({ customerId, products }: IRequest): Promise<IOrder> {
+    products = products.reduce(
+      (productsById, product) => {
+        const productIndex = productsById.findIndex(
+          productById => productById.id === product.id,
+        );
+
+        if (productIndex === -1) {
+          productsById.push(product);
+        } else {
+          productsById[productIndex].quantity += product.quantity;
+        }
+
+        return productsById;
+      },
+      [] as {
+        id: string;
+        quantity: number;
+      }[],
+    );
     const customerById = await this.customersRepository.findById(customerId);
 
     if (!customerById)
-      throw new AppError('Could not find any customer with the given id.');
+      throw new AppError('Could not find any customer with the given id', 404);
 
     const productsIds = products.map(product => product.id);
     const productsByIds = await this.productsRepository.findAllByIds(
@@ -39,14 +58,17 @@ class CreateOrderService {
     const existentsProductsIds = productsByIds.map(product => product.id);
 
     if (!productsByIds.length)
-      throw new AppError('Could not find any product with the given id.');
+      throw new AppError('Could not find any product with the given id', 404);
 
     const inexistentProducts = products.filter(
       product => !existentsProductsIds.includes(product.id),
     );
 
     if (inexistentProducts.length)
-      throw new AppError(`Could not find product ${inexistentProducts[0].id}.`);
+      throw new AppError(
+        `Could not find product ${inexistentProducts[0].id}`,
+        404,
+      );
 
     const productsWithQuantityUnavailable = products.filter(product =>
       productsByIds.find(
