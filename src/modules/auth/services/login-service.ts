@@ -28,11 +28,11 @@ class LoginService {
     private usersRepository: IUsersRepository,
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+    private generateAccessTokenService: GenerateAccessTokenService,
+    private generateRefreshTokenService: GenerateRefreshTokenService,
   ) {}
 
   async execute(data: IRequest): Promise<IResponse> {
-    const generateAccessTokenService = new GenerateAccessTokenService();
-    const generateRefreshTokenService = new GenerateRefreshTokenService();
     const user = await this.usersRepository.findByEmail(data.email);
 
     if (!user)
@@ -46,8 +46,10 @@ class LoginService {
     if (!matchPassword)
       throw new AppError('The email address or password is incorrect', 401);
 
-    const accessToken = generateAccessTokenService.execute(user.id);
-    const refreshToken = await generateRefreshTokenService.execute(user.id);
+    const accessToken = this.generateAccessTokenService.execute(user.id);
+    const refreshToken = await this.generateRefreshTokenService.execute(
+      user.id,
+    );
 
     return { user, accessToken, refreshToken };
   }
