@@ -22,7 +22,7 @@ class UpdateUserAvatarService {
   async execute(id: string, data: IRequest): Promise<IUser> {
     const userById = await this.usersRepository.findById(id);
 
-    if (!userById) throw new AppError('User not found');
+    if (!userById) throw new AppError('User not found', 404);
 
     if (userById.avatar) {
       await this.storageProvider.deleteFile(userById.avatar);
