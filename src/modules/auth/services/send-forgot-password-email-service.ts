@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import path from 'path';
 
+import config from '@config/index';
 import AppError from '@shared/errors/app-error';
 
 import { IUsersRepository } from '@modules/users/domain/repositories/users-repository.interface';
@@ -48,7 +49,7 @@ class SendForgotPasswordEmailService {
         file: templateFile,
         variables: {
           name: userByEmail.name,
-          link: `${process.env.APP_WEB_URL}/reset-password?token=${token}`,
+          link: `${config.APP_WEB_URL}/reset-password?token=${token}`,
         },
       },
     });

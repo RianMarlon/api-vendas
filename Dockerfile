@@ -6,7 +6,8 @@ RUN yarn
 
 COPY . .
 
-RUN yarn typeorm migration:run
+
+RUN yarn typeorm --dataSource ./src/shared/infra/typeorm/index.ts migration:run
 
 WORKDIR /usr/home/app
 

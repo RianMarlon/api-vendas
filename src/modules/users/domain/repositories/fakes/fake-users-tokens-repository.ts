@@ -6,12 +6,12 @@ import { IUserToken } from '../../models/user-token.interface';
 class FakeUsersTokensRepository implements IUsersTokensRepository {
   private usersTokens: IUserToken[] = [];
 
-  async findByToken(token: string): Promise<IUserToken | undefined> {
-    return this.usersTokens.find(userToken => userToken.token === token);
+  async findByToken(token: string): Promise<IUserToken | null> {
+    return this.usersTokens.find(userToken => userToken.token === token) || null;
   }
 
-  async findById(id: string): Promise<IUserToken | undefined> {
-    return this.usersTokens.find(userToken => userToken.id === id);
+  async findById(id: string): Promise<IUserToken | null> {
+    return this.usersTokens.find(userToken => userToken.id === id) || null;
   }
 
   async generate(userId: string): Promise<IUserToken> {

@@ -1,3 +1,5 @@
+import config from './index';
+
 interface IMailConfig {
   driver: 'mailtrap' | 'ses';
   defaults: {
@@ -9,7 +11,7 @@ interface IMailConfig {
 }
 
 export default {
-  driver: process.env.MAIL_DRIVER || 'mailtrap',
+  driver: config.MAIL_DRIVER || 'mailtrap',
   defaults: {
     from: {
       email: 'rianmarlon95@gmail.com',

@@ -7,6 +7,8 @@ import {
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 
+import config from '@config/index';
+
 import { UUID } from '@shared/utils/uuid';
 
 import { IUser } from '../../../domain/models/user.interface';
@@ -41,7 +43,7 @@ class User implements IUser {
       return null;
     }
 
-    return `${process.env.APP_API_URL}/files/${this.avatar}`;
+    return `${config.APP_API_URL}/files/${this.avatar}`;
   }
 
   constructor() {

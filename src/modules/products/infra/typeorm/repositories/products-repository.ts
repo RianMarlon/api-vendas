@@ -1,8 +1,9 @@
-import { getRepository, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { IPagination } from '@shared/domain/models/pagination.interface';
 import { IPaginationOptions } from '@shared/domain/models/pagination-options.interface';
-import pagination from '@shared/infra/typeorm/pagination';
+import { dataSource } from '@shared/infra/typeorm';
+import { pagination } from '@shared/infra/typeorm/pagination';
 
 import Product from '../entities/product';
 import { IProductsRepository } from '../../../domain/repositories/products-repository.interface';
@@ -11,7 +12,7 @@ class ProductsRepository implements IProductsRepository {
   private repository: Repository<Product>;
 
   constructor() {
-    this.repository = getRepository(Product);
+    this.repository = dataSource.getRepository(Product);
   }
 
   async findAll(
@@ -28,7 +29,7 @@ class ProductsRepository implements IProductsRepository {
     });
   }
 
-  async findByName(name: string): Promise<Product | undefined> {
+  async findByName(name: string): Promise<Product | null> {
     return await this.repository.findOne({
       where: {
         name,
@@ -36,7 +37,7 @@ class ProductsRepository implements IProductsRepository {
     });
   }
 
-  async findById(id: string): Promise<Product | undefined> {
+  async findById(id: string): Promise<Product | null> {
     return await this.repository.findOne({
       where: {
         id,

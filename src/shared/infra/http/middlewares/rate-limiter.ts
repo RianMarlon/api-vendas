@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import Redis from 'ioredis';
 import { RateLimiterRedis } from 'rate-limiter-flexible';
 
+import config from '@config/index';
+
 import AppError from '@shared/errors/app-error';
 
 export default async function rateLimiter(
@@ -11,9 +13,9 @@ export default async function rateLimiter(
 ): Promise<void> {
   try {
     const redisClient = new Redis({
-      host: process.env.REDIS_HOST,
-      port: Number(process.env.REDIS_PORT),
-      password: process.env.REDIS_PASS || undefined,
+      host: config.REDIS_HOST,
+      port: Number(config.REDIS_PORT),
+      password: config.REDIS_PASS || undefined,
     });
 
     const limiter = new RateLimiterRedis({

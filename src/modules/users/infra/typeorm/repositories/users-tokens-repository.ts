@@ -1,4 +1,6 @@
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+
+import { dataSource } from '@shared/infra/typeorm';
 
 import UserToken from '../entities/user-token';
 
@@ -8,10 +10,10 @@ class UsersTokensRepository implements IUsersTokensRepository {
   private repository: Repository<UserToken>;
 
   constructor() {
-    this.repository = getRepository(UserToken);
+    this.repository = dataSource.getRepository(UserToken);
   }
 
-  async findByToken(token: string): Promise<UserToken | undefined> {
+  async findByToken(token: string): Promise<UserToken | null> {
     return await this.repository.findOne({
       where: {
         token,
@@ -19,7 +21,7 @@ class UsersTokensRepository implements IUsersTokensRepository {
     });
   }
 
-  async findById(id: string): Promise<UserToken | undefined> {
+  async findById(id: string): Promise<UserToken | null> {
     return await this.repository.findOne({
       where: {
         id,

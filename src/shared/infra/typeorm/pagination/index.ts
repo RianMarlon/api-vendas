@@ -35,4 +35,4 @@ async function pagination<PaginationObject>(
   };
 }
 
-export default pagination;
+export { pagination };

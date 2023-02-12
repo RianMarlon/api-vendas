@@ -8,8 +8,8 @@ export interface IProductsRepository {
     paginationOptions: IPaginationOptions,
   ): Promise<IPagination<IProduct>>;
   findAllByIds(ids: string[]): Promise<IProduct[]>;
-  findByName(name: string): Promise<IProduct | undefined>;
-  findById(id: string): Promise<IProduct | undefined>;
+  findByName(name: string): Promise<IProduct | null>;
+  findById(id: string): Promise<IProduct | null>;
   create(productToCreate: ICreateProduct): Promise<IProduct>;
   update(
     id: string,

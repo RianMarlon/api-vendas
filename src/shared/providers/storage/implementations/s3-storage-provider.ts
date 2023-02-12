@@ -3,6 +3,7 @@ import path from 'path';
 import { S3 } from '@aws-sdk/client-s3';
 import mime from 'mime-types';
 
+import config from '@config/index';
 import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/app-error';
 import { IStorageProvider } from '../models/storage-provider.interface';
@@ -14,8 +15,8 @@ class S3StorageProvider implements IStorageProvider {
     this.client = new S3({
       region: 'us-east-1',
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+        accessKeyId: config.AWS_ACCESS_KEY_ID as string,
+        secretAccessKey: config.AWS_SECRET_ACCESS_KEY as string,
       },
     });
   }

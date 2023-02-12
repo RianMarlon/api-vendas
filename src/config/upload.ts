@@ -2,6 +2,8 @@ import multer, { StorageEngine } from 'multer';
 import path from 'path';
 import crypto from 'crypto';
 
+import config from './index';
+
 const uploadFolder = path.resolve(__dirname, '..', '..', 'uploads');
 const tempFolder = path.resolve(__dirname, '..', '..', 'temp');
 
@@ -20,7 +22,7 @@ interface IUploadConfig {
 }
 
 export default {
-  driver: process.env.STORAGE_DRIVER as string,
+  driver: config.STORAGE_DRIVER as string,
   directory: uploadFolder,
   tmpFolder: tempFolder,
   multer: {
@@ -37,7 +39,7 @@ export default {
   },
   config: {
     aws: {
-      bucket: process.env.BUCKET_NAME as string,
+      bucket: config.BUCKET_NAME as string,
     },
   },
 } as IUploadConfig;

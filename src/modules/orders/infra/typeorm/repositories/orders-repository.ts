@@ -12,7 +12,7 @@ class OrdersRepository implements IOrdersRepository {
     this.repository = getRepository(Order);
   }
 
-  async findById(id: string): Promise<Order | undefined> {
+  async findById(id: string): Promise<Order | null> {
     return await this.repository.findOne({
       where: {
         id,

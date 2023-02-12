@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 
 import HandlebarsMailParse from '../handlebars-mail-parse';
 import mailConfig from '@config/mail';
+import config from '@config/index';
 
 import { ISendMail } from '../models/send-mail.interface';
 import { IMailProvider } from '../models/mail-provider.interface';
@@ -10,11 +11,11 @@ import { IMailProvider } from '../models/mail-provider.interface';
 class MailtrapProvider implements IMailProvider {
   async sendEmail({ to, from, subject, html }: ISendMail): Promise<void> {
     const transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST,
-      port: Number(process.env.MAIL_PORT),
+      host: config.MAIL_HOST,
+      port: Number(config.MAIL_PORT),
       auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASSWORD,
+        user: config.MAIL_USER,
+        pass: config.MAIL_PASSWORD,
       },
     });
 

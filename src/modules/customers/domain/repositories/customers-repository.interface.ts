@@ -8,9 +8,9 @@ export interface ICustomersRepository {
   findAll(
     paginationOptions: IPaginationOptions,
   ): Promise<IPagination<ICustomer>>;
-  findByName(name: string): Promise<ICustomer | undefined>;
-  findByEmail(email: string): Promise<ICustomer | undefined>;
-  findById(id: string): Promise<ICustomer | undefined>;
+  findByName(name: string): Promise<ICustomer | null>;
+  findByEmail(email: string): Promise<ICustomer | null>;
+  findById(id: string): Promise<ICustomer | null>;
   create(customerToCreate: ICreateCustomer): Promise<ICustomer>;
   update(
     id: string,

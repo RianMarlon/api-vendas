@@ -31,16 +31,16 @@ class FakeUsersRepository implements IUsersRepository {
     } as IPagination<IUser>;
   }
 
-  async findByName(name: string): Promise<IUser | undefined> {
-    return this.users.find(user => user.name === name);
+  async findByName(name: string): Promise<IUser | null> {
+    return this.users.find(user => user.name === name) || null;
   }
 
-  async findByEmail(email: string): Promise<IUser | undefined> {
-    return this.users.find(user => user.email === email);
+  async findByEmail(email: string): Promise<IUser | null> {
+    return this.users.find(user => user.email === email) || null;
   }
 
-  async findById(id: string): Promise<IUser | undefined> {
-    return this.users.find(user => user.id === id);
+  async findById(id: string): Promise<IUser | null> {
+    return this.users.find(user => user.id === id) || null;
   }
 
   async create(userToCreate: ICreateUser): Promise<IUser> {

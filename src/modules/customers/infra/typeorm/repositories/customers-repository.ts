@@ -1,8 +1,9 @@
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
+import { dataSource } from '@shared/infra/typeorm';
 import { IPaginationOptions } from '@shared/domain/models/pagination-options.interface';
 import { IPagination } from '@shared/domain/models/pagination.interface';
-import pagination from '@shared/infra/typeorm/pagination';
+import { pagination } from '@shared/infra/typeorm/pagination';
 
 import Customer from '../entities/customer';
 
@@ -12,7 +13,7 @@ class CustomersRepository implements ICustomersRepository {
   private repository: Repository<Customer>;
 
   constructor() {
-    this.repository = getRepository(Customer);
+    this.repository = dataSource.getRepository(Customer);
   }
 
   async findAll(
@@ -21,7 +22,7 @@ class CustomersRepository implements ICustomersRepository {
     return await pagination<Customer>(this.repository, paginationOptions);
   }
 
-  async findByName(name: string): Promise<Customer | undefined> {
+  async findByName(name: string): Promise<Customer | null> {
     return await this.repository.findOne({
       where: {
         name,
@@ -29,7 +30,7 @@ class CustomersRepository implements ICustomersRepository {
     });
   }
 
-  async findByEmail(email: string): Promise<Customer | undefined> {
+  async findByEmail(email: string): Promise<Customer | null> {
     return await this.repository.findOne({
       where: {
         email: email.toLowerCase(),
@@ -37,7 +38,7 @@ class CustomersRepository implements ICustomersRepository {
     });
   }
 
-  async findById(id: string): Promise<Customer | undefined> {
+  async findById(id: string): Promise<Customer | null> {
     return await this.repository.findOne({
       where: {
         id,

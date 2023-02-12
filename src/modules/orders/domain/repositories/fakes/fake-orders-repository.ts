@@ -7,8 +7,8 @@ import { IOrdersRepository } from '../orders-repository.interface';
 class FakeOrdersRepository implements IOrdersRepository {
   private orders: IOrder[] = [];
 
-  async findById(id: string): Promise<IOrder | undefined> {
-    return this.orders.find(order => order.id === id);
+  async findById(id: string): Promise<IOrder | null> {
+    return this.orders.find(order => order.id === id) || null;
   }
 
   async create({ customer, products }: ICreateOrder): Promise<IOrder> {

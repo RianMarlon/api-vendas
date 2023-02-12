@@ -35,12 +35,12 @@ class FakeProductsRepository implements IProductsRepository {
     return this.products.filter(product => ids.includes(product.id));
   }
 
-  async findByName(name: string): Promise<IProduct | undefined> {
-    return this.products.find(product => product.name === name);
+  async findByName(name: string): Promise<IProduct | null> {
+    return this.products.find(product => product.name === name) || null;
   }
 
-  async findById(id: string): Promise<IProduct | undefined> {
-    return this.products.find(product => product.id === id);
+  async findById(id: string): Promise<IProduct | null> {
+    return this.products.find(product => product.id === id) || null;
   }
 
   async create(productToCreate: ICreateProduct): Promise<IProduct> {

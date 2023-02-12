@@ -1,9 +1,11 @@
 import { RedisOptions } from 'ioredis';
 
+import config from './index';
+
 export default {
   redis: {
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASS || undefined,
+    host: config.REDIS_HOST,
+    port: config.REDIS_PORT,
+    password: config.REDIS_PASS || undefined,
   },
 } as RedisOptions;

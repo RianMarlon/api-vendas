@@ -31,16 +31,16 @@ class FakeCustomersRepository implements ICustomersRepository {
     } as IPagination<ICustomer>;
   }
 
-  async findByName(name: string): Promise<ICustomer | undefined> {
-    return this.customers.find(customer => customer.name === name);
+  async findByName(name: string): Promise<ICustomer | null> {
+    return this.customers.find(customer => customer.name === name) || null;
   }
 
-  async findByEmail(email: string): Promise<ICustomer | undefined> {
-    return this.customers.find(customer => customer.email === email);
+  async findByEmail(email: string): Promise<ICustomer | null> {
+    return this.customers.find(customer => customer.email === email) || null;
   }
 
-  async findById(id: string): Promise<ICustomer | undefined> {
-    return this.customers.find(customer => customer.id === id);
+  async findById(id: string): Promise<ICustomer | null> {
+    return this.customers.find(customer => customer.id === id) || null;
   }
 
   async create(customerToCreate: ICreateCustomer): Promise<ICustomer> {
