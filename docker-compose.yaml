@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   server:
+    image: api-vendas
     build: .
     container_name: api-vendas
     ports:
