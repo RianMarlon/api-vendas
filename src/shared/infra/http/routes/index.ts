@@ -19,6 +19,9 @@ routes.use('/token', tokenRouter);
 routes.use('/profile', profileRouter);
 routes.use('/customers', customersRouter);
 routes.use('/orders', ordersRouter);
+routes.use('/status', (request, response) => {
+  return response.status(200).json();
+});
 
 routes.get('/', (request: Request, response: Response) => {
   return response.json({
